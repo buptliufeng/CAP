@@ -13,14 +13,6 @@ namespace Microsoft.CAP.Portal.Controllers
         {
             TuningViewModel testModel = new TuningViewModel()
             {
-                /*StreamID = "123456",
-                Parameters = new Dictionary<string, double>()
-                {
-                    { "ParamA", 1.5 },
-                    { "ParamB", 2.0 },
-                    { "ParamC", 3 },
-                    { "Period", 7 }
-                }*/
             };
             return View(testModel);
         }
