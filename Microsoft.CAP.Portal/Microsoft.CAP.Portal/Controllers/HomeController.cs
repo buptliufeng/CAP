@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CAP.Portal.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,18 @@ namespace Microsoft.CAP.Portal.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            TuningViewModel testModel = new TuningViewModel()
+            {
+                /*StreamID = "123456",
+                Parameters = new Dictionary<string, double>()
+                {
+                    { "ParamA", 1.5 },
+                    { "ParamB", 2.0 },
+                    { "ParamC", 3 },
+                    { "Period", 7 }
+                }*/
+            };
+            return View(testModel);
         }
 
         public ActionResult About()
