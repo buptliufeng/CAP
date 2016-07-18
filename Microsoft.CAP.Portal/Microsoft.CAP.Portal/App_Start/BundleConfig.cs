@@ -9,7 +9,8 @@ namespace Microsoft.CAP.Portal
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-ui-1.11.4.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -25,7 +26,17 @@ namespace Microsoft.CAP.Portal
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/themes/base/all.css"));
+
+            //add kendoUI css and js
+            bundles.Add(new StyleBundle("~/Content/kendoCSS").Include(
+                      "~/Content/styles/kendo.common.min.css",
+                      "~/Content/styles/kendo.default.min.css"
+                      ));
+            bundles.Add(new ScriptBundle("~/Scripts/kendoJS").Include(
+                    "~/Scripts/kendo/kendo.all.min.js"));
         }
     }
+    
 }
