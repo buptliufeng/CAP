@@ -21,7 +21,7 @@ namespace Microsoft.CAP.Portal.Models
 
         public TuningViewModel()
         {
-
+            Parameters = new Dictionary<string, double>();
         }
     }
 }
