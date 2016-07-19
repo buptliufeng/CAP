@@ -1,31 +1,144 @@
-﻿@{
+﻿@model Microsoft.CAP.Portal.Models.TuningViewModel
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+<style type="text/css">
+    /*vertically center-align columns*/
+    @@media (min-width: 992px) 
+    {
+        .vertical-center-align {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    /*styles for the original image*/
+    img{
+        width:100%;
+        position:relative
+    }
+
+    /*styles for the guidelines*/
+    h3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);/*center positioned on the image*/
+        font-family: Consolas;
+        color: ghostwhite;
+    }
+
+    /*set padding for class form-group*/
+    .form-group{
+        padding-bottom:2em
+    }
+</style>
+
+
+
+<!--get history result-->
+<div class="row vertical-center-align" style="margin-top:2em">
+    <div class="col-md-8" id="detection_history_original">
+        <img src="~/Images/detection-history-placeholder.png" alt="loading"/>
+        <h3 class="hidden-xs">
+            1. Enter your StreamId;<br />
+            2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
+            3. Select the START Date and END Date;<br />
+            4. Then you will get the History Detection Result
+        </h3>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-4" for="streamId">Stream:</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" id="streamId" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4" for="engineId">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="engineId">
+                            <!--engine example-->
+                            <option>Any</option>
+                            <option>1</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4" for="fromDatePicker">From:</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" id="fromDatePicker" type="text" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4" for="toDatePicker">To:</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" id="toDatePicker" type="text" />
+                    </div>
+                </div>
+                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn_getHistory">Get History Result</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+
+<!--tuning-->
+<div class="row vertical-center-align" style="margin-top:2em">
+    <div class="col-md-8" id="tuning_result_original">
+        <img src="~/Images/tuning-result-placeholder.png" alt="loading"/>
+        <h3 class="hidden-xs">
+            1. After getting History Result, modify the Parameters on the right;<br />
+            2. Retrain and you will get a Comparison Chart;<br />
+            3. If you are satisfied with the Tuning Result, please click on the Save Button
+        </h3>
     </div>
     <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        <div class="panel panel-success">
+            <div class="panel-body">
+                <!--parameters example-->
+                @foreach (var item in Model.Parameters)
+                {
+                    <div class="form-group">
+                        <label class="col-xs-4" for="@item.Key">@item.Key:</label>
+                        <div class="col-xs-8">
+                            <input class="form-control" id="@item.Key" type="text" value="@item.Value" />
+                        </div>
+                    </div>
+                }
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tuning">Retrain</button>
+                <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save">Save</button>
+            </div>
+        </div>
     </div>
 </div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //default:yesterday
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            var yesterdayString = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+
+            $("#fromDatePicker").val(yesterdayString);
+            $("#toDatePicker").val(yesterdayString);
+
+            var formatOfDate = "mm/dd/yy";
+            $("#fromDatePicker").datepicker({
+                minDate: "-1Y",
+                maxDate: 0,
+                dateFormat: formatOfDate
+            });
+            $("#toDatePicker").datepicker({
+                minDate: "-1Y",
+                maxDate: 0,
+                dateFormat: formatOfDate
+            });
+        })
+    </script>
+}

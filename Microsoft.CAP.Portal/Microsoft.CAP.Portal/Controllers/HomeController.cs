@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CAP.Portal.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,10 @@ namespace Microsoft.CAP.Portal.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            TuningViewModel testModel = new TuningViewModel()
+            {
+            };
+            return View(testModel);
         }
 
         public ActionResult About()
