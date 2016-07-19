@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ApiClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
@@ -93,6 +94,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.CAP.Model.Schema\Microsoft.CAP.Model.Schema.csproj">
+      <Project>{391772AA-D3F2-4F28-8324-ADC83CF05950}</Project>
+      <Name>Microsoft.CAP.Model.Schema</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.CAP.Portal\Microsoft.CAP.Portal.csproj">
       <Project>{E87A5422-67FE-4AC6-BAAA-F15A007A2CC2}</Project>
       <Name>Microsoft.CAP.Portal</Name>
