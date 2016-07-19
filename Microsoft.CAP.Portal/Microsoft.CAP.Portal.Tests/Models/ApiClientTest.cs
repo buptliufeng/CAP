@@ -18,16 +18,27 @@
         {
             string engineId = "any";
             DateTime date = DateTime.Parse("2016-5-29");
-            HttpResponseMessage responseMessage = await ApiClient.GetDetectionHistory(StreamId, engineId, date, date);
-            if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            try
             {
-                var jsonString = await responseMessage.Content.ReadAsStringAsync();
-                TuningResponse tuningResponse = JsonConvert.DeserializeObject<TuningResponse>(jsonString);
-                LogTuningResponse(tuningResponse);
+                HttpResponseMessage responseMessage = await ApiClient.GetDetectionHistory(StreamId, engineId, date, date);
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var jsonString = await responseMessage.Content.ReadAsStringAsync();
+                    TuningResponse tuningResponse = JsonConvert.DeserializeObject<TuningResponse>(jsonString);
+                    LogTuningResponse(tuningResponse);
+                }
+                else
+                {
+                    await DealWithErrorResponse(responseMessage);
+                }
             }
-            else
+            catch (HttpRequestException ex)
             {
-                await DealWithErrorResponse(responseMessage);
+                Trace.TraceError("HTTP request failed with error: {0}", ex.Message);
+                if (ex.InnerException != null)
+                {
+                    Trace.TraceError("InnerException: {0}", ex.InnerException.Message);
+                }
             }
         }
 
