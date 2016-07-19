@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/jqueryuiCSS")
-    @Styles.Render("~/Content/kendoCSS")
+    @Styles.Render("~/Content/jquery-ui-css")
+    @Styles.Render("~/Content/kendo-css")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -39,9 +39,9 @@
     </div>
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/Scripts/jqueryuiJS")
+    @Scripts.Render("~/Scripts/jquery-ui-js")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/Scripts/kendoJS")
+    @Scripts.Render("~/Scripts/kendo-js")
     @RenderSection("scripts", required: false)
 </body>
 </html>
