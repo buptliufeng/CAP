@@ -3,55 +3,78 @@
     ViewBag.Title = "Home Page";
 }
 
-<!-- vertically align columns-->
+
 <style type="text/css">
-    @@media (min-width: 992px) {
-        .vertical-align {
+    /*vertically center-align columns*/
+    @@media (min-width: 992px) 
+    {
+        .vertical-center-align {
             display: flex;
             align-items: center;
         }
     }
+
+    /*styles for the original image*/
+    img{
+        width:100%;
+        position:relative
+    }
+
+    /*styles for the guidelines*/
+    h3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);/*center positioned on the image*/
+        font-family: Consolas;
+        color: ghostwhite;
+    }
+
+    /*set padding for class form-group*/
+    .form-group{
+        padding-bottom:2em
+    }
 </style>
 
+
+
 <!--get history result-->
-<div class="row vertical-align" style="margin-top:2em">
-    <div class="col-md-8" id="chart1" style="position:relative">
-        <img src="~/Images/loading1.png" alt="loading" style="width:100%;position:relative" />
-        <div class="hidden-xs" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
-            <h3 style="font-family:Consolas;color:ghostwhite">
-                1. Enter your StreamID;<br />
-                2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
-                3. Select the START Date and END Date;<br />
-                4. Then you will get the History Detection Result
-            </h3>
-        </div>
+<div class="row vertical-center-align" style="margin-top:2em">
+    <div class="col-md-8" id="detection_history_original">
+        <img src="~/Images/detection-history-placeholder.png" alt="loading"/>
+        <h3 class="hidden-xs">
+            1. Enter your StreamId;<br />
+            2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
+            3. Select the START Date and END Date;<br />
+            4. Then you will get the History Detection Result
+        </h3>
     </div>
     <div class="col-md-4">
         <div class="panel panel-primary">
             <div class="panel-body">
-                <div class="form-group" style="padding-bottom:2em">
-                    <label class="col-xs-4" for="streamID">Stream:</label>
+                <div class="form-group">
+                    <label class="col-xs-4" for="streamId">Stream:</label>
                     <div class="col-xs-8">
-                        <input class="form-control" id="streamID" type="text"/>
+                        <input class="form-control" id="streamId" type="text" />
                     </div>
                 </div>
-                <div class="form-group" style="padding-bottom:2em">
-                    <label class="col-xs-4" for="engineID">Engine:</label>
+                <div class="form-group">
+                    <label class="col-xs-4" for="engineId">Engine:</label>
                     <div class="col-xs-8">
-                        <select class="form-control" id="engineID">
+                        <select class="form-control" id="engineId">
                             <!--engine example-->
                             <option>Any</option>
                             <option>1</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group" style="padding-bottom:2em">
+                <div class="form-group">
                     <label class="col-xs-4" for="fromDatePicker">From:</label>
                     <div class="col-xs-8">
                         <input class="form-control" id="fromDatePicker" type="text" />
                     </div>
                 </div>
-                <div class="form-group" style="padding-bottom:2em">
+                <div class="form-group">
                     <label class="col-xs-4" for="toDatePicker">To:</label>
                     <div class="col-xs-8">
                         <input class="form-control" id="toDatePicker" type="text" />
@@ -65,16 +88,14 @@
 
 
 <!--tuning-->
-<div class="row vertical-align" style="margin-top:2em">
-    <div class="col-md-8" id="chart2">
-        <img src="~/Images/loading2.png" alt="loading" style="width:100%;position:relative" />
-        <div class="hidden-xs" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
-            <h3 style="font-family:Consolas;color:ghostwhite">
-                1. After getting History Result, modify the Parameters on the right;<br />
-                2. Retrain and you will get a Comparison Chart;<br />
-                3. If you are satisfied with the Tuning Result, please click on the Save Button
-            </h3>
-        </div>
+<div class="row vertical-center-align" style="margin-top:2em">
+    <div class="col-md-8" id="tuning_result_original">
+        <img src="~/Images/tuning-result-placeholder.png" alt="loading"/>
+        <h3 class="hidden-xs">
+            1. After getting History Result, modify the Parameters on the right;<br />
+            2. Retrain and you will get a Comparison Chart;<br />
+            3. If you are satisfied with the Tuning Result, please click on the Save Button
+        </h3>
     </div>
     <div class="col-md-4">
         <div class="panel panel-success">
@@ -82,7 +103,7 @@
                 <!--parameters example-->
                 @foreach (var item in Model.Parameters)
                 {
-                    <div class="form-group" style="padding-bottom:2em">
+                    <div class="form-group">
                         <label class="col-xs-4" for="@item.Key">@item.Key:</label>
                         <div class="col-xs-8">
                             <input class="form-control" id="@item.Key" type="text" value="@item.Value" />
@@ -96,23 +117,28 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        //default:yesterday
-        var yesterday = new Date(new Date() - 24 * 60 * 60 * 1000);
-        $("#fromDatePicker").val((yesterday.getMonth()+1) + "/" + yesterday.getDate() + "/" + yesterday.getFullYear());
-        $("#toDatePicker").val((yesterday.getMonth()+1) + "/" + yesterday.getDate()+"/"+yesterday.getFullYear());
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //default:yesterday
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            var yesterdayString = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
 
-        var formatOfDate = "mm/dd/yy";
-        var from=$("#fromDatePicker").datepicker({
-            minDate: "-1M",
-            maxDate: 0,
-            dateFormat: formatOfDate
-        });
-        var to=$("#toDatePicker").datepicker({
-            minDate: "-1M",
-            maxDate: 0,
-            dateFormat: formatOfDate
-        });
-    })
-</script>
+            $("#fromDatePicker").val(yesterdayString);
+            $("#toDatePicker").val(yesterdayString);
+
+            var formatOfDate = "mm/dd/yy";
+            $("#fromDatePicker").datepicker({
+                minDate: "-1M",
+                maxDate: 0,
+                dateFormat: formatOfDate
+            });
+            $("#toDatePicker").datepicker({
+                minDate: "-1M",
+                maxDate: 0,
+                dateFormat: formatOfDate
+            });
+        })
+    </script>
+}

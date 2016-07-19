@@ -9,19 +9,19 @@ namespace Microsoft.CAP.Portal.Models
 {
     public class TuningViewModel
     {
-        public string StreamID { get; set; }
+        public string StreamId { get; set; }
 
-        public string EngineID { get; set; }
+        public string EngineId { get; set; }
 
         public string FromDate { get; set; }
 
         public string ToDate { get; set; }
 
-        public IDictionary<string,double> Parameters { get; set; }
+        public IDictionary<string,string> Parameters { get; set; }
 
         public TuningViewModel()
         {
-            Parameters = new Dictionary<string, double>();
+            Parameters = new Dictionary<string, string>();
         }
     }
 }
