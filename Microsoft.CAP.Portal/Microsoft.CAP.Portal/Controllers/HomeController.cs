@@ -1,7 +1,11 @@
-﻿using Microsoft.CAP.Portal.Models;
+﻿using Microsoft.CAP.Model.Schema.API;
+using Microsoft.CAP.Portal.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,12 +13,34 @@ namespace Microsoft.CAP.Portal.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        /*public ActionResult Index()
         {
-            TuningViewModel testModel = new TuningViewModel()
+            return View();
+        }*/
+        public async Task<ActionResult> Index()
+        {
+            string streamId = "test stream";
+            string engineId = "any";
+            DateTime startDate = DateTime.Parse("2016-5-29");
+            DateTime endDate = DateTime.Parse("2016-6-3");
+            try
             {
-            };
-            return View(testModel);
+                HttpResponseMessage responseMessage = await ApiClient.GetDetectionHistory(streamId, engineId, startDate, endDate);
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var jsonString = await responseMessage.Content.ReadAsStringAsync();
+                    TuningResponse tuningResponse = JsonConvert.DeserializeObject<TuningResponse>(jsonString);
+                    return View(tuningResponse);
+                }
+                else
+                {
+                    return View();//to do: deal with error
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                return View();//to do: deal with error
+            }
         }
 
         public ActionResult About()
