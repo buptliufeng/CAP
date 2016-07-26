@@ -235,7 +235,7 @@ function getLabelParams(from,to)
             break;
         }
         case "hour": {
-            params.step = hourStep * 3; //show label every 3 min
+            params.step = hourStep * 3; //show label every 3 hour
             params.format = "HH:mm";
             params.skip = (from.getMinutes())?0:(60 - from.getMinutes())*minuteStep;   //show labels when minute=0 
             break;
