@@ -1,35 +1,4 @@
-﻿//change json data (e.g. "/Date(1000000000000)/" ) to Date()
-function formatJsonDate(results) {
-    for (var index in results) {
-        results[index].Timestamp = new Date(parseInt(results[index].Timestamp.substr(6)));
-    }
-}
-
-//default: show the last showNum points 
-function getShowDate(results, showNum) {
-    var pointsLength = results.length;
-    var from, to;
-    if (pointsLength > showNum)
-        from = results[pointsLength - showNum].Timestamp;
-    else from = results[0].Timestamp;
-    to = results[pointsLength - 1].Timestamp;
-    var showDate = {
-        from: from,
-        to: to
-    }
-    return showDate;
-}
-
-function getAnomalyPoints(results) {
-    for (var index in results) {
-        if (results[index].IsAnomaly == true)
-            results[index].AnomalyValue = results[index].Value;
-        else
-            results[index].AnomalyValue = null;
-    }
-}
-
-function createChartParams(chartTitle, results) {
+﻿function createChartParams(chartTitle, results) {
     //pre-processing
     formatJsonDate(results);
     getAnomalyPoints(results);
@@ -225,19 +194,19 @@ function getLabelParams(from,to)
         case "week": {
             params.step = weekStep;
             params.format = "MM/dd";
-            params.skip = (from.getHours()==0)?0:(24 - from.getHours()) * hourStep; //show labels when hour=0
+            params.skip = (from.getHours()==0)?0:(24 - from.getHours()) * hourStep; //start show labels when hour=0
             break;
         }
         case "day": {
             params.step = dayStep;
             params.format = "MM/dd";
-            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * hourStep; //show labels when hour=0
+            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * hourStep; //start show labels when hour=0
             break;
         }
         case "hour": {
             params.step = hourStep * 3; //show label every 3 hour
             params.format = "HH:mm";
-            params.skip = (from.getMinutes())?0:(60 - from.getMinutes())*minuteStep;   //show labels when minute=0 
+            params.skip = (from.getMinutes())?0:(60 - from.getMinutes())*minuteStep;   //start show labels when minute=0 
             break;
         }
         case "minute": {
