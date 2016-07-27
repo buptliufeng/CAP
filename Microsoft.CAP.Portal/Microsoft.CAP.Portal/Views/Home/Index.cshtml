@@ -1,4 +1,4 @@
-﻿@model Microsoft.CAP.Portal.Models.TuningViewModel
+﻿@model Microsoft.CAP.Model.Schema.API.TuningResponse
 @{
     ViewBag.Title = "Home Page";
 }
@@ -17,7 +17,8 @@
     /*styles for the original image*/
     img{
         width:100%;
-        position:relative
+        position:relative;
+        height:512px
     }
 
     /*styles for the guidelines*/
@@ -39,7 +40,7 @@
 
 
 <!--get history result-->
-<div class="row vertical-center-align" style="margin-top:2em">
+<div class="row vertical-center-align" style="margin:1em">
     <div class="col-md-8" id="detection_history_original">
         <img src="~/Images/detection-history-placeholder.png" alt="loading"/>
         <h3 class="hidden-xs">
@@ -88,7 +89,7 @@
 
 
 <!--tuning-->
-<div class="row vertical-center-align" style="margin-top:2em">
+<div class="row vertical-center-align" style="margin:1em">
     <div class="col-md-8" id="tuning_result_original">
         <img src="~/Images/tuning-result-placeholder.png" alt="loading"/>
         <h3 class="hidden-xs">
@@ -118,6 +119,7 @@
 </div>
 
 @section scripts{
+    <script src="~/Scripts/chartHelper.js"></script>
     <script>
         $(document).ready(function () {
             //default:yesterday
@@ -139,6 +141,15 @@
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
+            var jsonTuningResult=@Html.Raw(Json.Encode(Model));
+            var results = jsonTuningResult.Results;
+            var intervalMinutes = parseInt(jsonTuningResult.DataIntervalSeconds/60);
+            $("#detection_history_original").kendoStockChart(createChartParams("History Detection Result",results,intervalMinutes));
         })
+
+        //refresh when the window size change
+        $(window).on("resize", function() {
+            $("#detection_history_original").data("kendoStockChart").refresh();
+        });
     </script>
 }
