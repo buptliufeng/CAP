@@ -1,16 +1,12 @@
-﻿using Microsoft.CAP.Model.Schema.API;
-using Microsoft.CAP.Portal.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Microsoft.CAP.Portal.Controllers
+﻿namespace Microsoft.CAP.Portal.Controllers
 {
+    using Model.Schema.API;
+    using Models;
+    using Newtonsoft.Json;
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     public class HomeController : Controller
     {
         /*public ActionResult Index()
