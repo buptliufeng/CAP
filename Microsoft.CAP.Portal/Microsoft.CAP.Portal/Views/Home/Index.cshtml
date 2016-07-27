@@ -143,7 +143,7 @@
             });
             var jsonTuningResult=@Html.Raw(Json.Encode(Model));
             var results = jsonTuningResult.Results;
-            var intervalMinutes = jsonTuningResult.DataIntervalSeconds/60;
+            var intervalMinutes = parseInt(jsonTuningResult.DataIntervalSeconds/60);
             $("#detection_history_original").kendoStockChart(createChartParams("History Detection Result",results,intervalMinutes));
         })
 

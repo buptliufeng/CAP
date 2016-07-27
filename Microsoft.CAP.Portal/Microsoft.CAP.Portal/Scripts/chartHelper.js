@@ -165,10 +165,10 @@ function getAnomalyPoints(results) {
 function onNavigatorChanged(e) {
     var axisArray = e.sender.options.categoryAxis;
     var timeAxis = axisArray[0];//get the categoryAxis we define above
-    var unitStep = timeAxis.baseUnitStep;
+    var minutePerStep = timeAxis.baseUnitStep;
     var newFrom = timeAxis.min;
     var newTo = timeAxis.max;
-    var newParams = getLabelParams(newFrom, newTo, unitStep);
+    var newParams = getLabelParams(newFrom, newTo, minutePerStep);
     timeAxis.labels.format = newParams.format;
     timeAxis.labels.step = newParams.step;
     timeAxis.labels.skip = newParams.skip;
@@ -177,37 +177,37 @@ function onNavigatorChanged(e) {
     e.sender.redraw();
 }
 
-function getLabelParams(from, to, unitStep) {
+function getLabelParams(from, to, minutePerStep) {
     var diff = to - from;
     var timeUnit = calcCategoryAxisTimeUnit(diff);
 
-    var minuteStep = 1 / unitStep,
-        hourStep = minuteStep * 60,
-        dayStep = hourStep * 24,
-        weekStep = dayStep * 7;
+    var stepPerMinute = 1 / minutePerStep,
+        stepPerHour = stepPerMinute * 60,
+        stepPerDay = stepPerHour * 24,
+        stepPerWeek = stepPerDay * 7;
 
     var params = new Object();
     switch (timeUnit) {
         case "week": {
-            params.step = weekStep;
+            params.step = stepPerWeek;
             params.format = "MM/dd";
-            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * hourStep; //start show labels when hour=0
+            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * stepPerHour; //start show labels when hour=0
             break;
         }
         case "day": {
-            params.step = dayStep;
+            params.step = stepPerDay;
             params.format = "MM/dd";
-            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * hourStep; //start show labels when hour=0
+            params.skip = (from.getHours() == 0) ? 0 : (24 - from.getHours()) * stepPerHour; //start show labels when hour=0
             break;
         }
         case "hour": {
-            params.step = hourStep * 3; //show label every 3 hour
+            params.step = stepPerHour * 3; //show label every 3 hour
             params.format = "HH:mm";
-            params.skip = (from.getMinutes()) ? 0 : (60 - from.getMinutes()) * minuteStep;   //start show labels when minute=0 
+            params.skip = (from.getMinutes()) ? 0 : (60 - from.getMinutes()) * stepPerMinute;   //start show labels when minute=0 
             break;
         }
         case "minute": {
-            params.step = minuteStep * 30;//show label every 30 min 
+            params.step = stepPerMinute * 30;//show label every 30 min 
             params.format = "HH:mm";
             params.skip = 0;
             break;
