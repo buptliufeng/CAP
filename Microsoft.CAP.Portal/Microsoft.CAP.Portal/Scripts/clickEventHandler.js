@@ -9,6 +9,8 @@ function onGetClicked() {
         endDate: $("#toDatePicker").val()
     };
 
+    $("#detection_history_loader").show();
+
     $.ajax({
         url: tuningUrl,
         type: "GET",
@@ -22,13 +24,15 @@ function onGetClicked() {
 
             var results = getResponse.Results;
             var intervalMinutes = getResponse.DataIntervalSeconds / 60;
-            $("#detection_history_original").kendoStockChart(createChartParams("History Detection Result", results, intervalMinutes));
+
+            $("#detection_history_chart").kendoStockChart(createChartParams("History Detection Result", results, intervalMinutes));
 
             //initialize tune part
             $("#parameters").empty();
             $("#btn_tuning").prop("disabled", false);
             $("#btn_save").prop("disabled", true);
             $("#save_success_text").empty();
+            $("#tuning_result_chart").empty();
 
             $.each(getResponse.Parameters, function (key, val) {
                 var oneParam = $("<div/>", { "class": "form-group" });
@@ -57,6 +61,8 @@ function onGetClicked() {
                 }));
             }
             $("#engineId").val(getResponse.EngineId);
+
+            $("#detection_history_loader").hide();
         }
     });
 }
@@ -77,6 +83,8 @@ function onTuneClicked() {
         Parameters: newParams
     };
 
+    $("#tuning_result_loader").show();
+
     $.ajax({
         url: tuningUrl,
         type: "POST",
@@ -90,13 +98,14 @@ function onTuneClicked() {
             tuneResponse = data;
             var results = tuneResponse.Results;
             var intervalMinutes = tuneResponse.DataIntervalSeconds / 60;
-            $("#tuning_result_original").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
+            $("#tuning_result_chart").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
 
             //enable save
             $("#btn_save").prop("disabled", false);
             $("#save_success_text").empty();
-        }
 
+            $("#tuning_result_loader").hide();
+        }
     });
 
 }
@@ -131,6 +140,9 @@ function onSaveConfirmed() {
 }
 
 $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+    $("#detection_history_loader").hide();
+    $("#tuning_result_loader").hide();
+
     if (jqxhr.statusText == "Bad Request") {
         var errorObject = jqxhr.responseJSON;
         var errorText = "ErrorCode = " + errorObject.ErrorCode + "\nErrorMessage = " + errorObject.ErrorMessage;

@@ -2,6 +2,9 @@
     if (results == null) {
         //return an empty chart if no results
         return {
+            chartArea: {
+                height: 512, //set height to be 512px
+            },
             valueAxis: {
                 labels: {
                     template: "#= value#"
