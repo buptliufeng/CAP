@@ -1,13 +1,10 @@
-﻿@model Microsoft.CAP.Model.Schema.API.TuningResponse
-@{
+﻿@{
     ViewBag.Title = "Home Page";
 }
 
-
 <style type="text/css">
     /*vertically center-align columns*/
-    @@media (min-width: 992px) 
-    {
+    @@media (min-width: 992px) {
         .vertical-center-align {
             display: flex;
             align-items: center;
@@ -15,10 +12,9 @@
     }
 
     /*styles for the original image*/
-    img{
-        width:100%;
-        position:relative;
-        height:512px
+    img {
+        width: 100%;
+        height: 512px;
     }
 
     /*styles for the guidelines*/
@@ -26,14 +22,14 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);/*center positioned on the image*/
+        transform: translate(-50%,-50%); /*center positioned on the image*/
         font-family: Consolas;
         color: ghostwhite;
     }
 
     /*set padding for class form-group*/
-    .form-group{
-        padding-bottom:2em
+    .form-group {
+        padding-bottom: 2em;
     }
 </style>
 
@@ -42,7 +38,7 @@
 <!--get history result-->
 <div class="row vertical-center-align" style="margin:1em">
     <div class="col-md-8" id="detection_history_original">
-        <img src="~/Images/detection-history-placeholder.png" alt="loading"/>
+        <img src="~/Images/detection-history-placeholder.png" alt="loading" />
         <h3 class="hidden-xs">
             1. Enter your StreamId;<br />
             2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
@@ -63,9 +59,8 @@
                     <label class="col-xs-4" for="engineId">Engine:</label>
                     <div class="col-xs-8">
                         <select class="form-control" id="engineId">
-                            <!--engine example-->
-                            <option>Any</option>
-                            <option>1</option>
+                            <!--initial engine list-->
+                            <option>any</option>
                         </select>
                     </div>
                 </div>
@@ -91,7 +86,7 @@
 <!--tuning-->
 <div class="row vertical-center-align" style="margin:1em">
     <div class="col-md-8" id="tuning_result_original">
-        <img src="~/Images/tuning-result-placeholder.png" alt="loading"/>
+        <img src="~/Images/tuning-result-placeholder.png" alt="loading" />
         <h3 class="hidden-xs">
             1. After getting History Result, modify the Parameters on the right;<br />
             2. Retrain and you will get a Comparison Chart;<br />
@@ -101,26 +96,24 @@
     <div class="col-md-4">
         <div class="panel panel-success">
             <div class="panel-body">
-                <!--parameters example-->
-                @foreach (var item in Model.Parameters)
-                {
-                    <div class="form-group">
-                        <label class="col-xs-4" for="@item.Key">@item.Key:</label>
-                        <div class="col-xs-8">
-                            <input class="form-control" id="@item.Key" type="text" value="@item.Value" />
-                        </div>
-                    </div>
-                }
-                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tuning">Retrain</button>
-                <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save">Save</button>
+                <!--to append parameters-->
+                <div id="parameters"></div>
+
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tuning" disabled="disabled">Retrain</button>
+                <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save" disabled="disabled">Save</button>
             </div>
+            <!--to show success info-->
+            <div id="save_success_text" style="text-align:center;font-size:small"></div>
         </div>
     </div>
 </div>
 
 @section scripts{
     <script src="~/Scripts/chartHelper.js"></script>
+    <script src="~/Scripts/clickEventHandler.js"></script>
     <script>
+        var tuningUrl = "@ViewBag.TuningUrl";
+
         $(document).ready(function () {
             //default:yesterday
             var date = new Date();
@@ -141,15 +134,22 @@
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
-            var jsonTuningResult=@Html.Raw(Json.Encode(Model));
-            var results = jsonTuningResult.Results;
-            var intervalMinutes = parseInt(jsonTuningResult.DataIntervalSeconds/60);
-            $("#detection_history_original").kendoStockChart(createChartParams("History Detection Result",results,intervalMinutes));
         })
 
         //refresh when the window size change
-        $(window).on("resize", function() {
-            $("#detection_history_original").data("kendoStockChart").refresh();
+        $(window).on("resize", function () {
+            var hisChart = $("#detection_history_original").data("kendoStockChart");
+            if (hisChart != null) {
+                hisChart.refresh();
+            }
+            var tuneChart = $("#tuning_result_original").data("kendoStockChart");
+            if (tuneChart != null) {
+                tuneChart.refresh();
+            }
         });
+
+        $("#btn_getHistory").on("click", onGetClicked);
+        $("#btn_tuning").on("click", onTuneClicked);
+        $("#btn_save").on("click", onSaveClicked);
     </script>
 }

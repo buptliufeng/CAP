@@ -1,4 +1,15 @@
 ﻿function createChartParams(chartTitle, results, intervalMinutes) {
+    if (results == null) {
+        //return an empty chart if no results
+        return {
+            valueAxis: {
+                labels: {
+                    template: "#= value#"
+                }
+            }
+        }
+    }
+
     //pre-processing
     formatJsonDate(results);
     getAnomalyPoints(results);
@@ -79,7 +90,19 @@
                 size: 2,
             },
             tooltip: {
-                visible: false
+                visible: true,
+                opacity: 0.8,
+                background: "deepskyblue",
+                border: {
+                    color: "deepskyblue"
+                },//in accord with normal points
+                template: "Timestamp: #=dataItem.Timestamp # <br>\
+                               Value: #= dataItem.Value # <br>\
+                               IsAnomaly: #= dataItem.IsAnomaly # <br>\
+                               ExpectedValue: #= dataItem.ExpectedValue # <br>\
+                               LowerBound: #= dataItem.LowerBound # <br>\
+                               UpperBound: #= dataItem.UpperBound # <br>\
+                               ConfidenceIndex: #= dataItem.ConfidenceIndex #",
             }
         }],
         valueAxis: {
@@ -110,7 +133,7 @@
                 field: "LowerBound",
                 color: "gold"
             }, {
-                type: "area",//make the anomaly obvious
+                type: "column",//make the anomaly obvious
                 field: "AnomalyValue",
                 color: "red",
             }],
@@ -131,10 +154,10 @@
     return chartParams;
 }
 
-//change json data (e.g. "/Date(1000000000000)/" ) to Date()
+//change json date to Date()
 function formatJsonDate(results) {
     for (var index in results) {
-        results[index].Timestamp = new Date(parseInt(results[index].Timestamp.substr(6)));
+        results[index].Timestamp = new Date(results[index].Timestamp);
     }
 }
 
@@ -203,7 +226,7 @@ function getLabelParams(from, to, minutePerStep) {
         case "hour": {
             params.step = stepPerHour * 3; //show label every 3 hour
             params.format = "HH:mm";
-            params.skip = (from.getMinutes()) ? 0 : (60 - from.getMinutes()) * stepPerMinute;   //start show labels when minute=0 
+            params.skip = (from.getMinutes() == 0) ? 0 : (60 - from.getMinutes()) * stepPerMinute;   //start show labels when minute=0 
             break;
         }
         case "minute": {
