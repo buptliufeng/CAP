@@ -139,6 +139,7 @@
                 type: "column",//make the anomaly obvious
                 field: "AnomalyValue",
                 color: "red",
+                gap: 3
             }],
             select: {
                 from: showDateRange.from,
