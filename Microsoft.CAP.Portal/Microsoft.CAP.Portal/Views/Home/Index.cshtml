@@ -1,13 +1,10 @@
-﻿@model Microsoft.CAP.Model.Schema.API.TuningResponse
-@{
+﻿@{
     ViewBag.Title = "Home Page";
 }
 
-
 <style type="text/css">
     /*vertically center-align columns*/
-    @@media (min-width: 992px) 
-    {
+    @@media (min-width: 992px) {
         .vertical-center-align {
             display: flex;
             align-items: center;
@@ -15,10 +12,9 @@
     }
 
     /*styles for the original image*/
-    img{
-        width:100%;
-        position:relative;
-        height:512px
+    img {
+        width: 100%;
+        height: 512px;
     }
 
     /*styles for the guidelines*/
@@ -26,14 +22,57 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);/*center positioned on the image*/
+        transform: translate(-50%,-50%); /*center positioned on the image*/
         font-family: Consolas;
         color: ghostwhite;
     }
 
     /*set padding for class form-group*/
-    .form-group{
-        padding-bottom:2em
+    .form-group {
+        padding-bottom: 2em;
+    }
+
+    .loading-icon {
+        border: 20px solid lightgray;
+        border-top: 20px solid gray;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -75px;
+        margin-left: -75px; /*center positioned*/
+        z-index: 1; /*top*/
+    }
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .chart {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
     }
 </style>
 
@@ -41,15 +80,22 @@
 
 <!--get history result-->
 <div class="row vertical-center-align" style="margin:1em">
-    <div class="col-md-8" id="detection_history_original">
-        <img src="~/Images/detection-history-placeholder.png" alt="loading"/>
-        <h3 class="hidden-xs">
-            1. Enter your StreamId;<br />
-            2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
-            3. Select the START Date and END Date;<br />
-            4. Then you will get the History Detection Result
-        </h3>
+    <div class="col-md-8">
+        <div id="detection_history_original">
+            <img src="~/Images/detection-history-placeholder.png" alt="loading" />
+            <h3 class="hidden-xs">
+                1. Enter your StreamId;<br />
+                2. Select an Engine, or just choose ANY to get the one UP-TO-DATE;<br />
+                3. Select the START Date and END Date;<br />
+                4. Then you will get the History Detection Result
+            </h3>
+        </div>
+        <div class="loading-icon" id="detection_history_loader" style="display:none"></div>
+        <div class="chart">
+            <div id="detection_history_chart"></div>
+        </div>
     </div>
+
     <div class="col-md-4">
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -63,9 +109,8 @@
                     <label class="col-xs-4" for="engineId">Engine:</label>
                     <div class="col-xs-8">
                         <select class="form-control" id="engineId">
-                            <!--engine example-->
-                            <option>Any</option>
-                            <option>1</option>
+                            <!--initial engine list-->
+                            <option>any</option>
                         </select>
                     </div>
                 </div>
@@ -81,7 +126,7 @@
                         <input class="form-control" id="toDatePicker" type="text" />
                     </div>
                 </div>
-                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn_getHistory">Get History Result</button>
+                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn_get_history">Get History Result</button>
             </div>
         </div>
     </div>
@@ -90,37 +135,42 @@
 
 <!--tuning-->
 <div class="row vertical-center-align" style="margin:1em">
-    <div class="col-md-8" id="tuning_result_original">
-        <img src="~/Images/tuning-result-placeholder.png" alt="loading"/>
-        <h3 class="hidden-xs">
-            1. After getting History Result, modify the Parameters on the right;<br />
-            2. Retrain and you will get a Comparison Chart;<br />
-            3. If you are satisfied with the Tuning Result, please click on the Save Button
-        </h3>
+    <div class="col-md-8">
+        <div id="tuning_result_original">
+            <img src="~/Images/tuning-result-placeholder.png" alt="loading" />
+            <h3 class="hidden-xs">
+                1. After getting History Result, modify the Parameters on the right;<br />
+                2. Retrain and you will get a Comparison Chart;<br />
+                3. If you are satisfied with the Tuning Result, please click on the Save Button
+            </h3>
+        </div>
+        <div class="loading-icon" id="tuning_result_loader" style="display:none"></div>
+        <div class="chart">
+            <div id="tuning_result_chart"></div>
+        </div>
     </div>
+
     <div class="col-md-4">
         <div class="panel panel-success">
             <div class="panel-body">
-                <!--parameters example-->
-                @foreach (var item in Model.Parameters)
-                {
-                    <div class="form-group">
-                        <label class="col-xs-4" for="@item.Key">@item.Key:</label>
-                        <div class="col-xs-8">
-                            <input class="form-control" id="@item.Key" type="text" value="@item.Value" />
-                        </div>
-                    </div>
-                }
-                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tuning">Retrain</button>
-                <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save">Save</button>
+                <!--to append parameters-->
+                <div id="parameters"></div>
+
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tune" disabled="disabled">Retrain</button>
+                <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save" disabled="disabled">Save</button>
             </div>
+            <!--to show success info-->
+            <div id="save_success_text" style="text-align:center;font-size:small"></div>
         </div>
     </div>
 </div>
 
 @section scripts{
     <script src="~/Scripts/chartHelper.js"></script>
+    <script src="~/Scripts/homeButtonClickHandler.js"></script>
     <script>
+        var tuningUrl = "@ViewBag.TuningUrl";
+
         $(document).ready(function () {
             //default:yesterday
             var date = new Date();
@@ -141,15 +191,22 @@
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
-            var jsonTuningResult=@Html.Raw(Json.Encode(Model));
-            var results = jsonTuningResult.Results;
-            var intervalMinutes = parseInt(jsonTuningResult.DataIntervalSeconds/60);
-            $("#detection_history_original").kendoStockChart(createChartParams("History Detection Result",results,intervalMinutes));
         })
 
         //refresh when the window size change
-        $(window).on("resize", function() {
-            $("#detection_history_original").data("kendoStockChart").refresh();
+        $(window).on("resize", function () {
+            var hisChart = $("#detection_history_chart").data("kendoStockChart");
+            if (hisChart != null) {
+                hisChart.refresh();
+            }
+            var tuneChart = $("#tuning_result_chart").data("kendoStockChart");
+            if (tuneChart != null) {
+                tuneChart.refresh();
+            }
         });
+
+        $("#btn_get_history").on("click", onGetClicked);
+        $("#btn_tune").on("click", onTuneClicked);
+        $("#btn_save").on("click", onSaveClicked);
     </script>
 }
