@@ -118,17 +118,16 @@ function onTuneClicked() {
 }
 
 function onSaveClicked() {
-    $("#btn_save").prop("disabled", true);
     var saveOk = confirm("The parameters will be saved to CAP system and affect future detection.\nAre you sure you want to save?");
     if (saveOk) {
         onSaveConfirmed();
     }
-    else {
-        $("#btn_save").prop("disabled", false);
-    }
 }
 
 function onSaveConfirmed() {
+    $("#tuning_result_loader").show();
+    $("#btn_save").prop("disabled", true);//avoid user's repetitive click
+
     var saveRequest = {
         StreamId: tuneResponse.StreamId,
         EngineId: tuneResponse.EngineId,
@@ -148,6 +147,7 @@ function onSaveConfirmed() {
             $("#save_success_text").html('<font color="green">Parameters are saved successfully!</font>');
         },
         complete: function () {
+            $("#tuning_result_loader").hide();
             $("#btn_save").prop("disabled", false);
         }
     })
