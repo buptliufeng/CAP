@@ -2,10 +2,12 @@
 {
     using System.Configuration;
     using System.Web.Mvc;
+
     public class HomeController : Controller
     {
         private static readonly string ApiBaseAddress = ConfigurationManager.AppSettings[nameof(ApiBaseAddress)];
         private static readonly string TuningUriPath = ConfigurationManager.AppSettings[nameof(TuningUriPath)];
+
         public ActionResult Index()
         {
             ViewBag.TuningUrl = ApiBaseAddress + TuningUriPath;

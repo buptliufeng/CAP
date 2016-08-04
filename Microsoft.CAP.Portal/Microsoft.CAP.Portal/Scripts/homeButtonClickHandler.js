@@ -10,6 +10,7 @@ function onGetClicked() {
     };
 
     $("#detection_history_loader").show();
+    $("#btn_get_history").prop("disabled", true);//avoid user's repetitive click
 
     $.ajax({
         url: tuningUrl,
@@ -29,7 +30,7 @@ function onGetClicked() {
 
             //initialize tune part
             $("#parameters").empty();
-            $("#btn_tuning").prop("disabled", false);
+            $("#btn_tune").prop("disabled", false);
             $("#btn_save").prop("disabled", true);
             $("#save_success_text").empty();
             $("#tuning_result_chart").empty();
@@ -62,7 +63,10 @@ function onGetClicked() {
             }
             $("#engineId").val(getResponse.EngineId);
 
+        },
+        complete: function () {
             $("#detection_history_loader").hide();
+            $("#btn_get_history").prop("disabled", false);
         }
     });
 }
@@ -84,6 +88,7 @@ function onTuneClicked() {
     };
 
     $("#tuning_result_loader").show();
+    $("#btn_tune").prop("disabled", true);//avoid user's repetitive click
 
     $.ajax({
         url: tuningUrl,
@@ -103,17 +108,23 @@ function onTuneClicked() {
             //enable save
             $("#btn_save").prop("disabled", false);
             $("#save_success_text").empty();
-
+        },
+        complete: function () {
             $("#tuning_result_loader").hide();
+            $("#btn_tune").prop("disabled", false);
         }
     });
 
 }
 
 function onSaveClicked() {
+    $("#btn_save").prop("disabled", true);
     var saveOk = confirm("The parameters will be saved to CAP system and affect future detection.\nAre you sure you want to save?");
     if (saveOk) {
         onSaveConfirmed();
+    }
+    else {
+        $("#btn_save").prop("disabled", false);
     }
 }
 
@@ -135,18 +146,17 @@ function onSaveConfirmed() {
         },
         success: function () {
             $("#save_success_text").html('<font color="green">Parameters are saved successfully!</font>');
+        },
+        complete: function () {
+            $("#btn_save").prop("disabled", false);
         }
     })
 }
 
 $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
-    $("#detection_history_loader").hide();
-    $("#tuning_result_loader").hide();
-
     if (jqxhr.statusText == "Bad Request") {
         var errorObject = jqxhr.responseJSON;
         var errorText = "ErrorCode = " + errorObject.ErrorCode + "\nErrorMessage = " + errorObject.ErrorMessage;
-        $("#btn_save").prop("disabled", true);
     }
     else// Deal with other standard HttpStatusCode such as 500 for InternalServerError
     {

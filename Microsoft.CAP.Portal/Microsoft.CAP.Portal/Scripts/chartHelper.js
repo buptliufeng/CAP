@@ -7,7 +7,7 @@
             },
             valueAxis: {
                 labels: {
-                    template: "#= value#"
+                    template: "#= value #"
                 }
             }
         }
@@ -74,7 +74,7 @@
             tooltip: {
                 visible: true,
                 opacity: 0.8,
-                template: "Timestamp: #=dataItem.Timestamp # <br>\
+                template: "Timestamp: #= dataItem.Timestamp # <br>\
                                Value: #= dataItem.Value # <br>\
                                IsAnomaly: #= dataItem.IsAnomaly # <br>\
                                ExpectedValue: #= dataItem.ExpectedValue # <br>\
@@ -99,7 +99,7 @@
                 border: {
                     color: "deepskyblue"
                 },//in accord with normal points
-                template: "Timestamp: #=dataItem.Timestamp # <br>\
+                template: "Timestamp: #= dataItem.Timestamp # <br>\
                                Value: #= dataItem.Value # <br>\
                                IsAnomaly: #= dataItem.IsAnomaly # <br>\
                                ExpectedValue: #= dataItem.ExpectedValue # <br>\
@@ -110,7 +110,7 @@
         }],
         valueAxis: {
             labels: {
-                template: "#= value#"
+                template: "#= value #"
             }
         },
         categoryAxis: {
@@ -158,7 +158,7 @@
     return chartParams;
 }
 
-//change json date to Date()
+//convert JSON date string to Date()
 function formatJsonDate(results) {
     for (var index in results) {
         results[index].Timestamp = new Date(results[index].Timestamp);

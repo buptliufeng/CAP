@@ -32,7 +32,7 @@
         padding-bottom: 2em;
     }
 
-    .loader {
+    .loading-icon {
         border: 20px solid lightgray;
         border-top: 20px solid gray;
         border-radius: 50%;
@@ -90,7 +90,7 @@
                 4. Then you will get the History Detection Result
             </h3>
         </div>
-        <div class="loader" id="detection_history_loader" style="display:none"></div>
+        <div class="loading-icon" id="detection_history_loader" style="display:none"></div>
         <div class="chart">
             <div id="detection_history_chart"></div>
         </div>
@@ -126,7 +126,7 @@
                         <input class="form-control" id="toDatePicker" type="text" />
                     </div>
                 </div>
-                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn_getHistory">Get History Result</button>
+                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn_get_history">Get History Result</button>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
                 3. If you are satisfied with the Tuning Result, please click on the Save Button
             </h3>
         </div>
-        <div class="loader" id="tuning_result_loader" style="display:none"></div>
+        <div class="loading-icon" id="tuning_result_loader" style="display:none"></div>
         <div class="chart">
             <div id="tuning_result_chart"></div>
         </div>
@@ -156,7 +156,7 @@
                 <!--to append parameters-->
                 <div id="parameters"></div>
 
-                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tuning" disabled="disabled">Retrain</button>
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn_tune" disabled="disabled">Retrain</button>
                 <button class="btn btn-warning col-xs-offset-2 col-xs-8" style="margin-top:2.5em" id="btn_save" disabled="disabled">Save</button>
             </div>
             <!--to show success info-->
@@ -167,7 +167,7 @@
 
 @section scripts{
     <script src="~/Scripts/chartHelper.js"></script>
-    <script src="~/Scripts/clickEventHandler.js"></script>
+    <script src="~/Scripts/homeButtonClickHandler.js"></script>
     <script>
         var tuningUrl = "@ViewBag.TuningUrl";
 
@@ -205,8 +205,8 @@
             }
         });
 
-        $("#btn_getHistory").on("click", onGetClicked);
-        $("#btn_tuning").on("click", onTuneClicked);
+        $("#btn_get_history").on("click", onGetClicked);
+        $("#btn_tune").on("click", onTuneClicked);
         $("#btn_save").on("click", onSaveClicked);
     </script>
 }
