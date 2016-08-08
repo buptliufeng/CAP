@@ -9,8 +9,8 @@ function onGetClicked() {
         endDate: $("#toDatePicker").val()
     };
 
-    $("#detection_history_loader").show();
-    $("#btn_get_history").prop("disabled", true);//avoid user's repetitive click
+    $("#detection-history-loader").show();
+    $("#btn-get-history").prop("disabled", true);//avoid user's repetitive click
 
     $.ajax({
         url: tuningUrl,
@@ -26,31 +26,47 @@ function onGetClicked() {
             var results = getResponse.Results;
             var intervalMinutes = getResponse.DataIntervalSeconds / 60;
 
-            $("#detection_history_chart").kendoStockChart(createChartParams("History Detection Result", results, intervalMinutes));
+            $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", results, intervalMinutes));
 
             //initialize tune part
-            $("#parameters").empty();
-            $("#btn_tune").prop("disabled", false);
-            $("#btn_save").prop("disabled", true);
-            $("#save_success_text").empty();
-            $("#tuning_result_chart").empty();
+            $("#parameters-in-system").empty();
+            $("#parameters-for-tuning").empty();
+            $("#btn-tune").prop("disabled", false);
+            $("#btn-save").prop("disabled", true);
+            $("#save-success-text").empty();
+            $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
 
             $.each(getResponse.Parameters, function (key, val) {
-                var oneParam = $("<div/>", { "class": "form-group" });
-                oneParam.append($("<label/>", {
+                var oneDisplayParam = $("<div/>", { "class": "form-group" });
+                oneDisplayParam.append($("<label/>", {
+                    "class": "col-xs-4",
+                    text: key
+                }));//display parameter name
+                oneDisplayParam.append($("<div/>", { "class": "col-xs-8" }).append(
+                    $("<input>", {
+                        "class": "form-control",
+                        type: "text",
+                        value: val,
+                        readonly: "readonly"
+                    })
+                ));//display parameter value
+                oneDisplayParam.appendTo($("#parameters-in-system"));
+
+                var oneEditParam = $("<div/>", { "class": "form-group" });
+                oneEditParam.append($("<label/>", {
                     "class": "col-xs-4",
                     "for": key,
                     text: key
-                }));//display parameter name
-                oneParam.append($("<div/>", { "class": "col-xs-8" }).append(
+                }));
+                oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
                     $("<input>", {
                         "class": "form-control",
                         id: key,
                         type: "text",
                         value: val
                     })
-                ));//display parameter value
-                oneParam.appendTo($("#parameters"));
+                ));//parameter value for user to edit
+                oneEditParam.appendTo($("#parameters-for-tuning"));
             })
 
             //update the engineId select list
@@ -65,14 +81,14 @@ function onGetClicked() {
 
         },
         complete: function () {
-            $("#detection_history_loader").hide();
-            $("#btn_get_history").prop("disabled", false);
+            $("#detection-history-loader").hide();
+            $("#btn-get-history").prop("disabled", false);
         }
     });
 }
 
 function onTuneClicked() {
-    var newParams = new Object();
+    var newParams = getResponse.Parameters == null ? null : new Object();
     for (var key in getResponse.Parameters) {
         //get parameter value entered by user 
         newParams[key] = $("#" + key).val();
@@ -87,8 +103,8 @@ function onTuneClicked() {
         Parameters: newParams
     };
 
-    $("#tuning_result_loader").show();
-    $("#btn_tune").prop("disabled", true);//avoid user's repetitive click
+    $("#tuning-result-loader").show();
+    $("#btn-tune").prop("disabled", true);//avoid user's repetitive click
 
     $.ajax({
         url: tuningUrl,
@@ -103,15 +119,15 @@ function onTuneClicked() {
             tuneResponse = data;
             var results = tuneResponse.Results;
             var intervalMinutes = tuneResponse.DataIntervalSeconds / 60;
-            $("#tuning_result_chart").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
+            $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
 
             //enable save
-            $("#btn_save").prop("disabled", false);
-            $("#save_success_text").empty();
+            $("#btn-save").prop("disabled", false);
+            $("#save-success-text").empty();
         },
         complete: function () {
-            $("#tuning_result_loader").hide();
-            $("#btn_tune").prop("disabled", false);
+            $("#tuning-result-loader").hide();
+            $("#btn-tune").prop("disabled", false);
         }
     });
 
@@ -125,8 +141,8 @@ function onSaveClicked() {
 }
 
 function onSaveConfirmed() {
-    $("#tuning_result_loader").show();
-    $("#btn_save").prop("disabled", true);//avoid user's repetitive click
+    $("#tuning-result-loader").show();
+    $("#btn-save").prop("disabled", true);//avoid user's repetitive click
 
     var saveRequest = {
         StreamId: tuneResponse.StreamId,
@@ -144,11 +160,11 @@ function onSaveConfirmed() {
             withCredentials: true
         },
         success: function () {
-            $("#save_success_text").html('<font color="green">Parameters are saved successfully!</font>');
+            $("#save-success-text").html('<font color="green">Parameters are saved successfully!</font>');
         },
         complete: function () {
-            $("#tuning_result_loader").hide();
-            $("#btn_save").prop("disabled", false);
+            $("#tuning-result-loader").hide();
+            $("#btn-save").prop("disabled", false);
         }
     })
 }

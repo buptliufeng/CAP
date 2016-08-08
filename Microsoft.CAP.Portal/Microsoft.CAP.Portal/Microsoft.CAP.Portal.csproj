@@ -184,8 +184,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
-    <Content Include="Scripts\chartHelper.js" />
-    <Content Include="Scripts\homeButtonClickHandler.js" />
+    <Content Include="Scripts\chart-helper.js" />
+    <Content Include="Scripts\home-button-click-handler.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
