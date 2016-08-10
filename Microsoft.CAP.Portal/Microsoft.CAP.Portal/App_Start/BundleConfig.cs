@@ -35,12 +35,10 @@ namespace Microsoft.CAP.Portal
             bundles.Add(new ScriptBundle("~/Scripts/kendo-js").Include(
                     "~/Scripts/kendo/kendo.all.min.js"));
 
-            //add jqueryui css and js for datepicker
-            bundles.Add(new StyleBundle("~/Content/jquery-ui-css").Include(
-                    "~/Content/themes/base/all.css"));
+            //add jquery-ui js for date picker
             bundles.Add(new ScriptBundle("~/Scripts/jquery-ui-js").Include(
-                    "~/Scripts/jquery-ui-1.11.4.js"));
+                    "~/Scripts/jquery-ui-{version}.js"));
         }
     }
-    
+
 }

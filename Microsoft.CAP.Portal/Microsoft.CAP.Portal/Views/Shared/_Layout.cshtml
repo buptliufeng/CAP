@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/jquery-ui-css")
+    @Styles.Render("~/Content/themes/base/all.css") @*jquery-ui*@
     @Styles.Render("~/Content/kendo-css")
 </head>
 <body>
@@ -25,7 +25,7 @@
                     @*
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        *@
+                    *@
                 </ul>
             </div>
         </div>
@@ -33,9 +33,9 @@
     <div class="container-fluid body-content">
         @RenderBody()
         @*<hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year -xxx</p>
-        </footer>*@
+            <footer>
+                <p>&copy; @DateTime.Now.Year -xxx</p>
+            </footer>*@
     </div>
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
