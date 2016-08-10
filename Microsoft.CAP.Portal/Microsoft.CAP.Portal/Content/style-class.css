@@ -1,0 +1,43 @@
+﻿/*vertically center-align columns*/
+@media (min-width: 992px) {
+    .vertical-center-align {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.loading-icon {
+    border: 20px solid lightgray;
+    border-top: 20px solid gray;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left: -75px; /*center positioned*/
+    z-index: 1; /*top*/
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

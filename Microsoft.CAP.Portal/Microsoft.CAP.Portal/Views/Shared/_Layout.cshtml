@@ -22,10 +22,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Try Tuning", "Try", "Home")</li>
                     @*
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        *@
+                    *@
                 </ul>
             </div>
         </div>
@@ -33,9 +34,9 @@
     <div class="container-fluid body-content">
         @RenderBody()
         @*<hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year -xxx</p>
-        </footer>*@
+            <footer>
+                <p>&copy; @DateTime.Now.Year -xxx</p>
+            </footer>*@
     </div>
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")

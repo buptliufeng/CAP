@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Try Tuning";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/style-class.css" />
+
+<div class="row vertical-center-align" id="before-tune" style="margin:15px;display:none">
+    <div class="col-md-8" id="before-tune-container" style="min-height:512px">
+        <div id="before-tune-chart"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-body form-horizontal">
+                <div id="before-tune-parameters"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row vertical-center-align" style="margin:15px">
+    <div class="col-md-8" style="min-height:512px">
+        <div id="current-chart"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-body form-horizontal">
+                <div class="form-group">
+                    <label class="col-xs-4" for="engine-id">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="engine-id">
+                            <option value="">any</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    <script src="~/Scripts/try-event-handler.js"></script>
+    <script>
+        var tryUrl = "@ViewBag.TryTuningUrl";
+        var engineUrl = "@ViewBag.GetEngineUrl";
+
+        $(document).ready(function(){
+            onPageLoaded();
+        });
+
+    </script>
+
+
+}
+

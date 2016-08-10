@@ -3,10 +3,10 @@ var tuneResponse = null;
 
 function onGetClicked() {
     var getRequest = {
-        streamId: $("#streamId").val(),
-        engineId: $("#engineId").val(),
-        startDate: $("#fromDatePicker").val(),
-        endDate: $("#toDatePicker").val()
+        streamId: $("#stream-id").val(),
+        engineId: $("#engine-id").val(),
+        startDate: $("#from-datepicker").val(),
+        endDate: $("#to-datepicker").val()
     };
 
     $("#detection-history-loader").show();
@@ -70,14 +70,14 @@ function onGetClicked() {
             })
 
             //update the engineId select list
-            if ($("#engineId option[value=" + getResponse.EngineId + "]").length == 0) {
+            if ($("#engine-id option[value=" + getResponse.EngineId + "]").length == 0) {
                 //not in the list
-                $("#engineId").append($("<option/>", {
+                $("#engine-id").append($("<option/>", {
                     value: getResponse.EngineId,
                     text: getResponse.EngineId
                 }));
             }
-            $("#engineId").val(getResponse.EngineId);
+            $("#engine-id").val(getResponse.EngineId);
 
         },
         complete: function () {
@@ -94,12 +94,12 @@ function onTuneClicked() {
         newParams[key] = $("#" + key).val();
     }
     var tuneRequest = {
-        StreamId: $("#streamId").val(),
-        EngineId: $("#engineId").val(),
+        StreamId: $("#stream-id").val(),
+        EngineId: $("#engine-id").val(),
         DataType: getResponse.DataType,
         DataIntervalSeconds: getResponse.DataIntervalSeconds,
-        StartDate: $("#fromDatePicker").val(),
-        EndDate: $("#toDatePicker").val(),
+        StartDate: $("#from-datepicker").val(),
+        EndDate: $("#to-datepicker").val(),
         Parameters: newParams
     };
 
