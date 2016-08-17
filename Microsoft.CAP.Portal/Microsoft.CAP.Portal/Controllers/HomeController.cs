@@ -1,6 +1,12 @@
 ﻿namespace Microsoft.CAP.Portal.Controllers
 {
+    using Model.Schema.API;
+    using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
     using System.Configuration;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     public class HomeController : Controller
@@ -13,14 +19,13 @@
         public ActionResult Index()
         {
             ViewBag.TuningUrl = ApiBaseAddress + TuningUriPath;
-            ViewBag.GetEngineUrl = ApiBaseAddress + GetEngineUriPath;
             return View();
         }
 
-        public ActionResult Try()
+        public async Task<ActionResult> Try()
         {
             ViewBag.TryTuningUrl = ApiBaseAddress + TryTuningUriPath;
-            ViewBag.GetEngineUrl = ApiBaseAddress + GetEngineUriPath;
+            ViewBag.AnomalyEngines = await GetAnomalyEngines();
             return View();
         }
 
@@ -37,5 +42,26 @@
 
             return View();
         }
+
+        public async Task<List<AnomalyEngineMetadata>> GetAnomalyEngines()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ApiBaseAddress);
+                var builder = new UriBuilder(ApiBaseAddress);
+                builder.Path = GetEngineUriPath;
+                string uri = builder.ToString();
+                HttpResponseMessage responseMessage = await client.GetAsync(uri);
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var jsonString = await responseMessage.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<AnomalyEngineMetadata>>(jsonString);
+                }
+                else
+                {
+                    return new List<AnomalyEngineMetadata>();
+                }
+            }
+        } 
     }
 }

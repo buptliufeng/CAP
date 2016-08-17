@@ -1,35 +1,71 @@
 ﻿@{
-    ViewBag.Title = "Try Tuning";
+    ViewBag.Title = "First Time Trial";
 }
 
 <link rel="stylesheet" type="text/css" href="~/Content/style-class.css" />
 
-<div class="row vertical-center-align" id="before-tune" style="margin:15px;display:none">
-    <div class="col-md-8" id="before-tune-container" style="min-height:512px">
-        <div id="before-tune-chart"></div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body form-horizontal">
-                <div id="before-tune-parameters"></div>
-            </div>
-        </div>
+<div class="panel panel-default" style="margin:15px">
+    <div class="panel-body">
+        <h3>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h3>
     </div>
 </div>
 
-<div class="row vertical-center-align" style="margin:15px">
-    <div class="col-md-8" style="min-height:512px">
-        <div id="current-chart"></div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-body form-horizontal">
-                <div class="form-group">
-                    <label class="col-xs-4" for="engine-id">Engine:</label>
-                    <div class="col-xs-8">
-                        <select class="form-control" id="engine-id">
-                            <option value="">any</option>
-                        </select>
+<div class="row" style="margin:15px">
+    <div class="panel panel-info">
+        <div class="panel-body form-horizontal">
+            <div class="row">
+                <div class="col-md-5 ">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <label>DataSet:</label>
+                            <!--button to open the modal-->
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#read-me-modal">ReadMe</button>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" id="csv-path" readonly="readonly" style="max-width:none" />
+                                <div class="input-group-btn">
+                                    <label class="btn btn-primary">
+                                        <!--form a select file button with style-->
+                                        Browse
+                                        <input id="csv-selector" type="file" style="display:none" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <!--show time range to help user select start time-->
+                    <div class="help-block" id="time-range" style="font-size:small"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="data-type">DataType:</label>
+                            <select class="form-control" id="data-type">
+                                <option value="1">Periodic</option>
+                                <option value="0">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="interval-seconds">DataIntervalSeconds:</label>
+                            <input class="form-control" id="interval-seconds" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="start-time">DetectionStartTime:</label>
+                            <input class="form-control" id="start-time" type="text" disabled="disabled"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,21 +73,161 @@
     </div>
 </div>
 
+<!--trial one-->
+<div class="row vertical-center-align" style="margin:15px">
+    <div class="col-md-8" style="min-height:512px">
+        <div class="loading-icon" id="trial-one-loader" style="display:none"></div>
+        <div id="trial-one-chart"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-body form-horizontal">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label" style="text-align:left" for="trial-one-engine">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="trial-one-engine">
+                            <option value="">any</option>
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div id="trial-one-parameters">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label" style="text-align:left" for="trial-one-DataPeriod">DataPeriod:</label>
+                        <div class="col-xs-8">
+                            <input class="form-control" id="trial-one-DataPeriod" name="DataPeriod" />
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="trial-one-btn">Try</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<hr />
+<!--trial two-->
+<div class="row vertical-center-align" style="margin:15px">
+    <div class="col-md-8" style="min-height:512px">
+        <div class="loading-icon" id="trial-two-loader" style="display:none"></div>
+        <div id="trial-two-chart"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-body form-horizontal">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label" style="text-align:left" for="trial-two-engine">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="trial-two-engine">
+                            <option value="">any</option>
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div id="trial-two-parameters">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label" style="text-align:left" for="trial-two-DataPeriod">DataPeriod:</label>
+                        <div class="col-xs-8">
+                            <input class="form-control" id="trial-two-DataPeriod" name="DataPeriod" />
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success col-xs-offset-2 col-xs-8" id="trial-two-btn">Try</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Read Me Modal-->
+<div class="modal fade" id="read-me-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modal-label">Read Me</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Here you should upload a CSV file containing 2 columns (with header).</h4>
+                <h4><b>Example:</b></h4>
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>2016-07-01T00:00:00</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>2016-07-01T01:00:00</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr class="danger">
+                        <td>Format: Standard DateTime string without comma</td>
+                        <td>Format: Double</td>
+                    </tr>
+                </table>
+                <h4><b>Attention:</b></h4>
+                <ul>
+                    <li><h4>Must be a complete set without missing data.</h4></li>
+                    <li><h4>Data set includes training data and detection data. DetectionStartTime must be within the time range of DataSet, data before this time will be used for training, data starting from this time will be used for detection.</h4> </li>
+                    <li><h4>To make a successful request, the training data should contain at least 4 DataPeriod cycles for Periodic stream, or at least 28 days for Unknown DataType. </h4></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
+    <script src="~/Scripts/chart-helper.js"></script>
     <script src="~/Scripts/try-event-handler.js"></script>
     <script>
         var tryUrl = "@ViewBag.TryTuningUrl";
-        var engineUrl = "@ViewBag.GetEngineUrl";
 
-        $(document).ready(function(){
-            onPageLoaded();
+        $(document).ready(function () {
+            //check for FILE API support
+            if (!window.FileReader) {
+                alert("FileReader is not supported in this browser.");
+            }
+
+            $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", null, null));
+            $("#trial-two-chart").kendoStockChart(createChartParams("Trial two", null, null));
         });
 
+        //refresh when the window size change
+        $(window).on("resize", function () {
+            var currentChart = $("#trial-one-chart").data("kendoStockChart");
+            if (currentChart != null) {
+                currentChart.refresh();
+            }
+            var currentChart = $("#trial-two-chart").data("kendoStockChart");
+            if (currentChart != null) {
+                currentChart.refresh();
+            }
+        });
+
+        $("#csv-selector").on("change", onCsvSelected);
+        $("#data-type").on("change", onDataTypeChanged);
+        $("#trial-one-btn").on("click", { trialNumStr: "one" }, onTryClicked);
+        $("#trial-two-btn").on("click", { trialNumStr: "two" }, onTryClicked);
+
     </script>
-
-
 }
 
