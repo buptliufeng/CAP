@@ -15,6 +15,7 @@
     {
         private static readonly string ApiBaseAddress = ConfigurationManager.AppSettings[nameof(ApiBaseAddress)];
         private static readonly string TuningUriPath = ConfigurationManager.AppSettings[nameof(TuningUriPath)];
+        private static readonly string GetEngineUriPath = ConfigurationManager.AppSettings[nameof(GetEngineUriPath)];
 
         public static async Task<HttpResponseMessage> GetDetectionHistory(string streamId, string engineId, DateTime startDate, DateTime endDate)
         {
@@ -56,6 +57,20 @@
                 client.BaseAddress = new Uri(ApiBaseAddress);
 
                 HttpResponseMessage responseMessage = await client.PutAsJsonAsync(TuningUriPath, request);
+                return responseMessage;
+            }
+        }
+
+        public static async Task<HttpResponseMessage> GetAnomalyEngine()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ApiBaseAddress);
+                var builder = new UriBuilder(ApiBaseAddress);
+                builder.Path = GetEngineUriPath;
+                string uri = builder.ToString();
+
+                HttpResponseMessage responseMessage = await client.GetAsync(uri);
                 return responseMessage;
             }
         }

@@ -1,13 +1,11 @@
 ﻿@{
-    ViewBag.Title = "CAP";
+    ViewBag.Title = "CAP-Tuning";
 }
 
 <link rel="stylesheet" type="text/css" href="~/Content/style-class.css">
 
-<div class="panel panel-default" style="margin:15px">
-    <div class="panel-body">
-        <h3>Usage: Tune param of currently detected streams in CAP</h3>
-    </div>
+<div class="alert alert-info" style="margin:15px">
+    <h3>Usage: Tune param of currently detected streams in CAP</h3>
 </div>
 
 <!--get history result-->
@@ -21,28 +19,33 @@
         <div class="panel panel-primary">
             <div class="panel-body form-horizontal">
                 <div class="form-group">
-                    <label class="col-xs-4" for="stream-id">Stream:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="stream-id">Stream:</label>
                     <div class="col-xs-8">
                         <input class="form-control" id="stream-id" type="text" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="engine-id">Engine:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="engine-id">Engine:</label>
                     <div class="col-xs-8">
                         <select class="form-control" id="engine-id">
-                            <!--initial engine list-->
                             <option value="any">any</option>
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="from-datepicker">From:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="from-datepicker">From:</label>
                     <div class="col-xs-8">
                         <input class="form-control" id="from-datepicker" type="text" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="to-datepicker">To:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="to-datepicker">To:</label>
                     <div class="col-xs-8">
                         <input class="form-control" id="to-datepicker" type="text" />
                     </div>
@@ -66,6 +69,19 @@
         <div class="panel panel-success">
             <div class="panel-heading" style="text-align:center">Tuning</div>
             <div class="panel-body form-horizontal">
+                <div class="form-group" style="display:none">
+                    <label class="col-xs-4 control-label" style="text-align:left" for="tune-engine-id">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="tune-engine-id">
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
                 <!--to append parameters-->
                 <div id="parameters-for-tuning"></div>
 

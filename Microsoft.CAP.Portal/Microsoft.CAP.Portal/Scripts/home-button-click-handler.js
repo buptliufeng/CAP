@@ -29,56 +29,17 @@ function onGetClicked() {
             $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", results, intervalMinutes));
 
             //initialize tune part
-            $("#parameters-in-system").empty();
-            $("#parameters-for-tuning").empty();
             $("#btn-tune").prop("disabled", false);
             $("#btn-save").prop("disabled", true);
             $("#save-success-text").empty();
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
 
-            $.each(getResponse.Parameters, function (key, val) {
-                var oneDisplayParam = $("<div/>", { "class": "form-group" });
-                oneDisplayParam.append($("<label/>", {
-                    "class": "col-xs-4",
-                    text: key
-                }));//display parameter name
-                oneDisplayParam.append($("<div/>", { "class": "col-xs-8" }).append(
-                    $("<input>", {
-                        "class": "form-control",
-                        type: "text",
-                        value: val,
-                        readonly: "readonly"
-                    })
-                ));//display parameter value
-                oneDisplayParam.appendTo($("#parameters-in-system"));
+            showParamsInSystem(getResponse);
+            updateParamsForTuning(getResponse);
 
-                var oneEditParam = $("<div/>", { "class": "form-group" });
-                oneEditParam.append($("<label/>", {
-                    "class": "col-xs-4",
-                    "for": key,
-                    text: key
-                }));
-                oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
-                    $("<input>", {
-                        "class": "form-control",
-                        id: key,
-                        type: "text",
-                        value: val
-                    })
-                ));//parameter value for user to edit
-                oneEditParam.appendTo($("#parameters-for-tuning"));
-            })
-
-            //update the engineId select list
-            if ($("#engine-id option[value=" + getResponse.EngineId + "]").length == 0) {
-                //not in the list
-                $("#engine-id").append($("<option/>", {
-                    value: getResponse.EngineId,
-                    text: getResponse.EngineId
-                }));
-            }
             $("#engine-id").val(getResponse.EngineId);
-
+            $("#tune-engine-id").parents(".form-group").show();
+            $("#tune-engine-id").val(getResponse.EngineId);
         },
         complete: function () {
             $("#detection-history-loader").hide();
@@ -88,14 +49,16 @@ function onGetClicked() {
 }
 
 function onTuneClicked() {
-    var newParams = getResponse.Parameters == null ? null : new Object();
-    for (var key in getResponse.Parameters) {
-        //get parameter value entered by user 
-        newParams[key] = $("#" + key).val();
-    }
+    var newParams = new Object();
+    $("#parameters-for-tuning").find("input").each(function () {
+        if ($(this).val() != "") {
+            newParams[this.id] = this.value;
+        }
+    });
+
     var tuneRequest = {
         StreamId: $("#stream-id").val(),
-        EngineId: $("#engine-id").val(),
+        EngineId: $("#tune-engine-id").val(),
         DataType: getResponse.DataType,
         DataIntervalSeconds: getResponse.DataIntervalSeconds,
         StartDate: $("#from-datepicker").val(),
@@ -120,6 +83,8 @@ function onTuneClicked() {
             var results = tuneResponse.Results;
             var intervalMinutes = tuneResponse.DataIntervalSeconds / 60;
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
+
+            updateParamsForTuning(tuneResponse);
 
             //enable save
             $("#btn-save").prop("disabled", false);
@@ -180,3 +145,49 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
     alert(jqxhr.statusText + "\n" + errorText);
 });
+
+function updateParamsForTuning(response)
+{
+    $("#parameters-for-tuning").empty();
+
+    $.each(response.Parameters, function (key, val) {
+        var oneEditParam = $("<div/>", { "class": "form-group" });
+        oneEditParam.append($("<label/>", {
+            "class": "col-xs-4 control-label",
+            style: "text-align:left",
+            "for": key,
+            text: key
+        }));
+        oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
+            $("<input>", {
+                "class": "form-control",
+                id: key,
+                type: "text",
+                value: val
+            })
+        ));//parameter value for user to edit
+        oneEditParam.appendTo($("#parameters-for-tuning"));
+    });
+}
+
+function showParamsInSystem(response)
+{
+    $("#parameters-in-system").empty();
+
+    $.each(response.Parameters, function (key, val) {
+        var oneDisplayParam = $("<div/>", { "class": "form-group" });
+        oneDisplayParam.append($("<label/>", {
+            "class": "col-xs-4",
+            text: key
+        }));//display parameter name
+        oneDisplayParam.append($("<div/>", { "class": "col-xs-8" }).append(
+            $("<input>", {
+                "class": "form-control",
+                type: "text",
+                value: val,
+                readonly: "readonly"
+            })
+        ));//display parameter value
+        oneDisplayParam.appendTo($("#parameters-in-system"));
+    });
+}
