@@ -146,8 +146,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     alert(jqxhr.statusText + "\n" + errorText);
 });
 
-function updateParamsForTuning(response)
-{
+function updateParamsForTuning(response) {
     $("#parameters-for-tuning").empty();
 
     $.each(response.Parameters, function (key, val) {
@@ -170,8 +169,7 @@ function updateParamsForTuning(response)
     });
 }
 
-function showParamsInSystem(response)
-{
+function showParamsInSystem(response) {
     $("#parameters-in-system").empty();
 
     $.each(response.Parameters, function (key, val) {

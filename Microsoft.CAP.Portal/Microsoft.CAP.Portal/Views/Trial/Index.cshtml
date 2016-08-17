@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="~/Content/style-class.css" />
 
 <div class="alert alert-info" style="margin:15px">
-        <h3>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h3>
+    <h3>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h3>
 </div>
 
 <div class="row" style="margin:15px">
@@ -62,7 +62,7 @@
                     <div class="form-group">
                         <div class="col-md-12 form-inline">
                             <label for="start-time">DetectionStartTime:</label>
-                            <input class="form-control" id="start-time" type="text" disabled="disabled"/>
+                            <input class="form-control" id="start-time" type="text" disabled="disabled" />
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,9 @@
                 </div>
                 <div id="trial-one-parameters">
                     <div class="form-group">
-                        <label class="col-xs-4 control-label" style="text-align:left" for="trial-one-DataPeriod">DataPeriod:</label>
+                        <div class="col-xs-4">
+                            <label class="control-label" style="text-align:left" for="trial-one-DataPeriod" data-toggle="tooltip" title="Unit: data points">DataPeriod:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="trial-one-DataPeriod" name="DataPeriod" />
                         </div>
@@ -134,7 +136,10 @@
                 </div>
                 <div id="trial-two-parameters">
                     <div class="form-group">
-                        <label class="col-xs-4 control-label" style="text-align:left" for="trial-two-DataPeriod">DataPeriod:</label>
+                        <div class="col-xs-4">
+                            <label class="control-label" style="text-align:left" for="trial-two-DataPeriod" data-toggle="tooltip" title="Unit: data points">DataPeriod:</label>
+                        </div>
+
                         <div class="col-xs-8">
                             <input class="form-control" id="trial-two-DataPeriod" name="DataPeriod" />
                         </div>
@@ -207,6 +212,9 @@
 
             $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", null, null));
             $("#trial-two-chart").kendoStockChart(createChartParams("Trial two", null, null));
+
+            //show tooltip for dataperiod at first
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         //refresh when the window size change
