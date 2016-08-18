@@ -1,54 +1,22 @@
 ﻿@{
-    ViewBag.Title = "CAP";
+    ViewBag.Title = "CAP-Tuning";
+
+    if (ViewBag.LoadEngineError != null)
+    {
+        <script>
+            //replace " with \" to ensure quotes shown in string, and use Html.Raw to prevent html-encoding (e.g. " -> &quot;)
+            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusCode.Replace("\"", "\\\""))";
+            var errorMessage = "@Html.Raw(ViewBag.LoadEngineError.ErrorMessage.Replace("\"", "\\\""))";
+            alert(statusText + "\n" + errorMessage);
+        </script>
+    }
 }
 
-<style type="text/css">
-    /*vertically center-align columns*/
-    @@media (min-width: 992px) {
-        .vertical-center-align {
-            display: flex;
-            align-items: center;
-        }
-    }
+<link rel="stylesheet" type="text/css" href="~/Content/custom.css">
 
-    .loading-icon {
-        border: 20px solid lightgray;
-        border-top: 20px solid gray;
-        border-radius: 50%;
-        width: 150px;
-        height: 150px;
-        -webkit-animation: spin 2s linear infinite;
-        animation: spin 2s linear infinite;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -75px;
-        margin-left: -75px; /*center positioned*/
-        z-index: 1; /*top*/
-    }
-
-    @@-webkit-keyframes spin {
-        0% {
-            -webkit-transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-        }
-    }
-
-    @@keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-</style>
-
-
+<div class="alert alert-info" style="margin:15px">
+    <h3>Usage: Tune param of currently detected streams in CAP</h3>
+</div>
 
 <!--get history result-->
 <div class="row vertical-center-align" style="margin:15px">
@@ -61,30 +29,35 @@
         <div class="panel panel-primary">
             <div class="panel-body form-horizontal">
                 <div class="form-group">
-                    <label class="col-xs-4" for="streamId">Stream:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="stream-id">Stream:</label>
                     <div class="col-xs-8">
-                        <input class="form-control" id="streamId" type="text" />
+                        <input class="form-control" id="stream-id" type="text" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="engineId">Engine:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="engine-id">Engine:</label>
                     <div class="col-xs-8">
-                        <select class="form-control" id="engineId">
-                            <!--initial engine list-->
-                            <option>any</option>
+                        <select class="form-control" id="engine-id">
+                            <option value="any">any</option>
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="fromDatePicker">From:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="from-datepicker">From:</label>
                     <div class="col-xs-8">
-                        <input class="form-control" id="fromDatePicker" type="text" />
+                        <input class="form-control" id="from-datepicker" type="text" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-xs-4" for="toDatePicker">To:</label>
+                    <label class="col-xs-4 control-label" style="text-align:left" for="to-datepicker">To:</label>
                     <div class="col-xs-8">
-                        <input class="form-control" id="toDatePicker" type="text" />
+                        <input class="form-control" id="to-datepicker" type="text" />
                     </div>
                 </div>
                 <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn-get-history" style="margin-bottom:15px">Get History Result</button>
@@ -106,6 +79,19 @@
         <div class="panel panel-success">
             <div class="panel-heading" style="text-align:center">Tuning</div>
             <div class="panel-body form-horizontal">
+                <div class="form-group" style="display:none">
+                    <label class="col-xs-4 control-label" style="text-align:left" for="tune-engine-id">Engine:</label>
+                    <div class="col-xs-8">
+                        <select class="form-control" id="tune-engine-id">
+                            @{
+                                foreach (var engine in ViewBag.AnomalyEngines)
+                                {
+                                    <option value="@engine.EngineId">@engine.Description</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
                 <!--to append parameters-->
                 <div id="parameters-for-tuning"></div>
 
@@ -130,23 +116,23 @@
             date.setDate(date.getDate() - 1);
             var yesterdayString = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
 
-            $("#fromDatePicker").val(yesterdayString);
-            $("#toDatePicker").val(yesterdayString);
+            $("#from-datepicker").val(yesterdayString);
+            $("#to-datepicker").val(yesterdayString);
 
             var formatOfDate = "mm/dd/yy";
-            $("#fromDatePicker").datepicker({
+            $("#from-datepicker").datepicker({
                 minDate: "-1Y",
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
-            $("#toDatePicker").datepicker({
+            $("#to-datepicker").datepicker({
                 minDate: "-1Y",
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
             $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", null, null));
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
-        })
+        });
 
         //refresh when the window size change
         $(window).on("resize", function () {

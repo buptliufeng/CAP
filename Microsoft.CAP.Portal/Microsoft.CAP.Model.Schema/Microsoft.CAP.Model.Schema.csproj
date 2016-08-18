@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\AnomalyEngineMetadata.cs" />
     <Compile Include="API\CapError.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="DetectionOutput.cs" />
