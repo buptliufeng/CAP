@@ -5,7 +5,7 @@
     {
         <script>
             //replace " with \" to ensure quotes shown in string, and use Html.Raw to prevent html-encoding (e.g. " -> &quot;)
-            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusText.Replace("\"", "\\\""))";
+            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusCode.Replace("\"", "\\\""))";
             var errorMessage = "@Html.Raw(ViewBag.LoadEngineError.ErrorMessage.Replace("\"", "\\\""))";
             alert(statusText + "\n" + errorMessage);
         </script>

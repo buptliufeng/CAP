@@ -2,7 +2,7 @@
 {
     public class ApiError
     {
-        public string StatusText { get; set; }
+        public string StatusCode { get; set; }
 
         public string ErrorMessage { get; set; }
     }
