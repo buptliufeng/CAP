@@ -26,6 +26,11 @@
             else
             {
                 ViewBag.AnomalyEngines = new List<AnomalyEngineMetadata>();
+                ViewBag.LoadEngineError = new ApiError
+                {
+                    StatusText = responseMessage.StatusCode.ToString(),
+                    ErrorMessage = await responseMessage.Content.ReadAsStringAsync()
+                };
             }
             return View();
         }

@@ -1,8 +1,18 @@
 ﻿@{
     ViewBag.Title = "CAP-Tuning";
+
+    if (ViewBag.LoadEngineError != null)
+    {
+        <script>
+            //replace " with \" to ensure quotes shown in string, and use Html.Raw to prevent html-encoding (e.g. " -> &quot;)
+            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusText.Replace("\"", "\\\""))";
+            var errorMessage = "@Html.Raw(ViewBag.LoadEngineError.ErrorMessage.Replace("\"", "\\\""))";
+            alert(statusText + "\n" + errorMessage);
+        </script>
+    }
 }
 
-<link rel="stylesheet" type="text/css" href="~/Content/style-class.css">
+<link rel="stylesheet" type="text/css" href="~/Content/custom.css">
 
 <div class="alert alert-info" style="margin:15px">
     <h3>Usage: Tune param of currently detected streams in CAP</h3>
