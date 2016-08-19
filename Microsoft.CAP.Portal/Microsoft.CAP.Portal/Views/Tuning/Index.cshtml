@@ -4,7 +4,7 @@
     if (ViewBag.LoadEngineError != null)
     {
         <script>
-            var loadEngineError = @Html.Raw(Json.Encode(ViewBag.Title));//use Html.Raw() to prevent html-encoding
+            var loadEngineError = @Html.Raw(Json.Encode(ViewBag.LoadEngineError));//use Html.Raw() to prevent html-encoding
             alert(loadEngineError.StatusCode + "\n" + loadEngineError.ErrorMessage);
         </script>
     }
