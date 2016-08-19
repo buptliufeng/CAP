@@ -8,6 +8,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Script.Serialization;
 
     public class TuningController : Controller
     {
@@ -26,11 +27,13 @@
             else
             {
                 ViewBag.AnomalyEngines = new List<AnomalyEngineMetadata>();
-                ViewBag.LoadEngineError = new ApiError
+                var loadEngineError = new ApiError
                 {
                     StatusCode = responseMessage.StatusCode.ToString(),
                     ErrorMessage = await responseMessage.Content.ReadAsStringAsync()
                 };
+                var javascriptSerializer = new JavaScriptSerializer();
+                ViewBag.LoadEngineError = javascriptSerializer.Serialize(loadEngineError);
             }
             return View();
         }

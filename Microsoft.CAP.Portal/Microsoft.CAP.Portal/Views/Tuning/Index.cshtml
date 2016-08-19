@@ -4,7 +4,7 @@
     if (ViewBag.LoadEngineError != null)
     {
         <script>
-            var loadEngineError = @Html.Raw(Json.Encode(ViewBag.LoadEngineError));//use Html.Raw() to prevent html-encoding
+            var loadEngineError = @Html.Raw(ViewBag.LoadEngineError);//use Html.Raw() to prevent html-encoding
             alert(loadEngineError.StatusCode + "\n" + loadEngineError.ErrorMessage);
         </script>
     }
@@ -139,7 +139,7 @@
     <script src="~/Scripts/chart-helper.js"></script>
     <script src="~/Scripts/home-button-click-handler.js"></script>
     <script>
-        var tuningUrl = @Html.Raw(Json.Encode(ViewBag.TuningUrl));
+        var tuningUrl = "@ViewBag.TuningUrl";
 
         $(document).ready(function () {
             //default:yesterday

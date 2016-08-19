@@ -4,7 +4,7 @@
     if (ViewBag.LoadEngineError != null)
     {
         <script>
-            var loadEngineError = @Html.Raw(Json.Encode(ViewBag.LoadEngineError));//use Html.Raw() to prevent html-encoding
+            var loadEngineError = @Html.Raw(ViewBag.LoadEngineError);//use Html.Raw() to prevent html-encoding
             alert(loadEngineError.StatusCode + "\n" + loadEngineError.ErrorMessage);
         </script>
     }
@@ -210,7 +210,7 @@
     <script src="~/Scripts/chart-helper.js"></script>
     <script src="~/Scripts/try-event-handler.js"></script>
     <script>
-        var tryUrl =@Html.Raw(Json.Encode(ViewBag.TryTuningUrl));
+        var tryUrl ="@ViewBag.TryTuningUrl";
 
         $(document).ready(function () {
             //check for FILE API support
