@@ -1,38 +1,44 @@
 ﻿var tryDataSet = null;
 
 function onCsvSelected(event) {
-    $("#csv-path").val("loading data...");
-    $("#trial-one-btn").prop("disabled", true);
-    $("#trial-two-btn").prop("disabled", true);
-
     var selectedFile = event.target.files[0];
-    var reader = new FileReader();
-    reader.readAsText(selectedFile);
-    reader.onload = function (event) {
-        tryDataSet = csvToArray(event.target.result);
+    if (selectedFile) {
+        $("#csv-name").val("loading data...");
+        $("#trial-one-btn").prop("disabled", true);
+        $("#trial-two-btn").prop("disabled", true);
 
-        //dataset is loaded
-        if (tryDataSet.length >= 2) {
-            var firstTimestamp = new Date(tryDataSet[0].Timestamp);
-            var secondTimestamp = new Date(tryDataSet[1].Timestamp);
-            var lastTimestamp = new Date(tryDataSet[tryDataSet.length - 1].Timestamp);
-            var intervalSecs = (secondTimestamp - firstTimestamp) / 1000;
+        var reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = function (readerEvent) {
+            tryDataSet = csvToArray(readerEvent.target.result);
 
-            $("#interval-seconds").val(intervalSecs);
-            $("#time-range").html("Time Range:" + formatDateString(firstTimestamp) + " - " + formatDateString(lastTimestamp));
-            $("#start-time").prop("disabled", false);
-            $("#start-time").datepicker({
-                dateFormat: "mm/dd/yy",
-                minDate: firstTimestamp,
-                maxDate: lastTimestamp
-            });
+            //dataset is loaded
+            if (tryDataSet.length >= 2) {
+                var firstTimestamp = new Date(tryDataSet[0].Timestamp);
+                var secondTimestamp = new Date(tryDataSet[1].Timestamp);
+                var lastTimestamp = new Date(tryDataSet[tryDataSet.length - 1].Timestamp);
+                var intervalSecs = (secondTimestamp - firstTimestamp) / 1000;
 
-            //show dataset
-            $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", tryDataSet, intervalSecs / 60));
+                $("#interval-seconds").val(intervalSecs);
+                $("#time-range").html("Time Range:" + formatDateString(firstTimestamp) + " - " + formatDateString(lastTimestamp));
+                $("#start-time").prop("disabled", false);
+                $("#start-time").datepicker("option", {
+                    minDate: firstTimestamp,
+                    maxDate: lastTimestamp
+                })
+
+                //show dataset
+                $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", tryDataSet, intervalSecs / 60));
+            }
+
+            var fullPath = $("#csv-selector").val();
+            var csvName = fullPath.substring(fullPath.lastIndexOf("\\") + 1);
+            $("#csv-name").val(csvName);
+            $("#csv-selector").val("");//enable reloading file
+
+            $("#trial-one-btn").prop("disabled", false);
+            $("#trial-two-btn").prop("disabled", false);
         }
-        $("#csv-path").val($("#csv-selector").val());
-        $("#trial-one-btn").prop("disabled", false);
-        $("#trial-two-btn").prop("disabled", false);
     }
 }
 
@@ -79,7 +85,7 @@ function onTryClicked(event) {
                     "class": "col-xs-4 control-label",
                     style: "text-align:left",
                     "for": "trial-" + trialNumStr + "-" + key,
-                    text: key
+                    text: key + ":"
                 }));
                 oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
                     $("<input>", {
@@ -94,6 +100,7 @@ function onTryClicked(event) {
             });
 
             $("#trial-" + trialNumStr + "-engine").val(tryResponse.EngineId);//show the default engine when user choose "any"
+            $("#data-type").val(tryResponse.DataType);//update datatype
         },
         complete: function () {
             $("#trial-" + trialNumStr + "-btn").prop("disabled", false);

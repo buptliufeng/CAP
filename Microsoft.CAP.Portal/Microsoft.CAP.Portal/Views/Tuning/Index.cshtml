@@ -4,10 +4,8 @@
     if (ViewBag.LoadEngineError != null)
     {
         <script>
-            //replace " with \" to ensure quotes shown in string, and use Html.Raw to prevent html-encoding (e.g. " -> &quot;)
-            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusCode.Replace("\"", "\\\""))";
-            var errorMessage = "@Html.Raw(ViewBag.LoadEngineError.ErrorMessage.Replace("\"", "\\\""))";
-            alert(statusText + "\n" + errorMessage);
+            var loadEngineError = @Html.Raw(ViewBag.LoadEngineError);//use Html.Raw() to prevent html-encoding
+            alert(loadEngineError.StatusCode + "\n" + loadEngineError.ErrorMessage);
         </script>
     }
 }
@@ -15,12 +13,63 @@
 <link rel="stylesheet" type="text/css" href="~/Content/custom.css">
 
 <div class="alert alert-info" style="margin:15px">
-    <h3>Usage: Tune param of currently detected streams in CAP</h3>
+    <h4>Usage: Tune param of currently detected streams in CAP</h4>
+</div>
+
+<div class="row" style="margin:15px">
+    <div class="panel panel-info">
+        <div class="panel-body form-horizontal">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="stream-id">Stream:</label>
+                            <input class="form-control" id="stream-id" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="from-datepicker">From:</label>
+                            <input class="form-control" id="from-datepicker" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="to-datepicker">To:</label>
+                            <input class="form-control" id="to-datepicker" type="text" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="stream-info" style="display:none">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="data-type">DataType:</label>
+                            <input class="form-control" id="data-type" readonly="readonly" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="col-md-12 form-inline">
+                            <label for="interval-seconds">DataIntervalSeconds:</label>
+                            <input class="form-control" id="interval-seconds" type="text" readonly="readonly" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!--get history result-->
 <div class="row vertical-center-align" style="margin:15px">
-    <div class="col-md-8" style="min-height:512px">
+    <div class="col-md-8" style="min-height:450px">
         <div class="loading-icon" id="detection-history-loader" style="display:none"></div>
         <div id="detection-history-chart"></div>
     </div>
@@ -28,12 +77,6 @@
     <div class="col-md-4">
         <div class="panel panel-primary">
             <div class="panel-body form-horizontal">
-                <div class="form-group">
-                    <label class="col-xs-4 control-label" style="text-align:left" for="stream-id">Stream:</label>
-                    <div class="col-xs-8">
-                        <input class="form-control" id="stream-id" type="text" />
-                    </div>
-                </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label" style="text-align:left" for="engine-id">Engine:</label>
                     <div class="col-xs-8">
@@ -48,18 +91,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label" style="text-align:left" for="from-datepicker">From:</label>
-                    <div class="col-xs-8">
-                        <input class="form-control" id="from-datepicker" type="text" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label" style="text-align:left" for="to-datepicker">To:</label>
-                    <div class="col-xs-8">
-                        <input class="form-control" id="to-datepicker" type="text" />
-                    </div>
-                </div>
                 <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn-get-history" style="margin-bottom:15px">Get History Result</button>
                 <div id="parameters-in-system"></div>
             </div>
@@ -70,7 +101,7 @@
 
 <!--tuning-->
 <div class="row vertical-center-align" style="margin:15px">
-    <div class="col-md-8" style="min-height:512px">
+    <div class="col-md-8" style="min-height:450px">
         <div class="loading-icon" id="tuning-result-loader" style="display:none"></div>
         <div id="tuning-result-chart"></div>
     </div>
@@ -130,6 +161,7 @@
                 maxDate: 0,
                 dateFormat: formatOfDate
             });
+
             $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", null, null));
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
         });

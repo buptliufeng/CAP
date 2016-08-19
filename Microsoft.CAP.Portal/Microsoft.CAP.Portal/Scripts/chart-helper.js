@@ -6,7 +6,7 @@
                 text:chartTitle
             },
             chartArea: {
-                height: 512, //set height to be 512px
+                height: 450, //set height to be 450px
             },
             valueAxis: {
                 labels: {
@@ -31,7 +31,7 @@
             visible: true
         },
         chartArea: {
-            height: 512 //set height to be 512px
+            height: 450 //set height to be 450px
         },
         seriesDefaults: {
             type: "line"
@@ -93,7 +93,8 @@
             missingValues: "gap",   //not show the null points
             zIndex: 3,  //set Anomaly to be the top layer
             markers: {
-                size: 2,
+                size: 4,
+                background:"red"
             },
             tooltip: {
                 visible: true,

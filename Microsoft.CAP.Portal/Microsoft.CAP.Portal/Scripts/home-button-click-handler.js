@@ -1,5 +1,6 @@
 ﻿var getResponse = null;
 var tuneResponse = null;
+var dataTypeMap = ["Unknown", "Periodic"];
 
 function onGetClicked() {
     var getRequest = {
@@ -40,6 +41,10 @@ function onGetClicked() {
             $("#engine-id").val(getResponse.EngineId);
             $("#tune-engine-id").parents(".form-group").show();
             $("#tune-engine-id").val(getResponse.EngineId);
+
+            $("#data-type").val(dataTypeMap[getResponse.DataType]);
+            $("#interval-seconds").val(getResponse.DataIntervalSeconds);
+            $("#stream-info").show();
         },
         complete: function () {
             $("#detection-history-loader").hide();
@@ -155,7 +160,7 @@ function updateParamsForTuning(response) {
             "class": "col-xs-4 control-label",
             style: "text-align:left",
             "for": key,
-            text: key
+            text: key + ":"
         }));
         oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
             $("<input>", {
@@ -175,8 +180,9 @@ function showParamsInSystem(response) {
     $.each(response.Parameters, function (key, val) {
         var oneDisplayParam = $("<div/>", { "class": "form-group" });
         oneDisplayParam.append($("<label/>", {
-            "class": "col-xs-4",
-            text: key
+            "class": "col-xs-4 control-label",
+            style: "text-align:left",
+            text: key + ":"
         }));//display parameter name
         oneDisplayParam.append($("<div/>", { "class": "col-xs-8" }).append(
             $("<input>", {
