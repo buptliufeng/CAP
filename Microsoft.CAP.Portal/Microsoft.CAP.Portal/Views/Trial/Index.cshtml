@@ -4,10 +4,8 @@
     if (ViewBag.LoadEngineError != null)
     {
         <script>
-            //replace " with \" to ensure quotes shown in string, and use Html.Raw to prevent html-encoding (e.g. " -> &quot;)
-            var statusText = "@Html.Raw(ViewBag.LoadEngineError.StatusCode.Replace("\"", "\\\""))";
-            var errorMessage = "@Html.Raw(ViewBag.LoadEngineError.ErrorMessage.Replace("\"", "\\\""))";
-            alert(statusText + "\n" + errorMessage);
+            var loadEngineError = @Html.Raw(Json.Encode(ViewBag.LoadEngineError));//use Html.Raw() to prevent html-encoding
+            alert(loadEngineError.StatusCode + "\n" + loadEngineError.ErrorMessage);
         </script>
     }
 }
@@ -15,14 +13,14 @@
 <link rel="stylesheet" type="text/css" href="~/Content/custom.css" />
 
 <div class="alert alert-info" style="margin:15px">
-    <h3>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h3>
+    <h4>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h4>
 </div>
 
 <div class="row" style="margin:15px">
     <div class="panel panel-info">
         <div class="panel-body form-horizontal">
             <div class="row">
-                <div class="col-md-5 ">
+                <div class="col-md-7 ">
                     <div class="form-group">
                         <div class="col-md-3">
                             <label>DataSet:</label>
@@ -31,7 +29,7 @@
                         </div>
                         <div class="col-md-9">
                             <div class="input-group">
-                                <input class="form-control" id="csv-path" readonly="readonly" style="max-width:none" />
+                                <input class="form-control" id="csv-name" readonly="readonly" style="max-width:none" />
                                 <div class="input-group-btn">
                                     <label class="btn btn-primary">
                                         <!--form a select file button with style-->
@@ -49,7 +47,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group">
                         <div class="col-md-12 form-inline">
                             <label for="data-type">DataType:</label>
@@ -60,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-md-12 form-inline">
                             <label for="interval-seconds">DataIntervalSeconds:</label>
@@ -68,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-md-12 form-inline">
                             <label for="start-time">DetectionStartTime:</label>
@@ -83,7 +81,7 @@
 
 <!--trial one-->
 <div class="row vertical-center-align" style="margin:15px">
-    <div class="col-md-8" style="min-height:512px">
+    <div class="col-md-8" style="min-height:450px">
         <div class="loading-icon" id="trial-one-loader" style="display:none"></div>
         <div id="trial-one-chart"></div>
     </div>
@@ -123,7 +121,7 @@
 <hr />
 <!--trial two-->
 <div class="row vertical-center-align" style="margin:15px">
-    <div class="col-md-8" style="min-height:512px">
+    <div class="col-md-8" style="min-height:450px">
         <div class="loading-icon" id="trial-two-loader" style="display:none"></div>
         <div id="trial-two-chart"></div>
     </div>
@@ -212,7 +210,7 @@
     <script src="~/Scripts/chart-helper.js"></script>
     <script src="~/Scripts/try-event-handler.js"></script>
     <script>
-        var tryUrl = "@ViewBag.TryTuningUrl";
+        var tryUrl =@Html.Raw(Json.Encode(ViewBag.TryTuningUrl));
 
         $(document).ready(function () {
             //check for FILE API support
@@ -220,6 +218,10 @@
                 alert("FileReader is not supported in this browser.");
             }
 
+            $("#start-time").datepicker({
+                dateFormat: "mm/dd/yy",
+
+            });
             $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", null, null));
             $("#trial-two-chart").kendoStockChart(createChartParams("Trial two", null, null));
 
