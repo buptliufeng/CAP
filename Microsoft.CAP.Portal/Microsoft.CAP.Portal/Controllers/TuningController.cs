@@ -22,7 +22,7 @@
             if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonString = await responseMessage.Content.ReadAsStringAsync();
-                ViewBag.AnomalyEngines=JsonConvert.DeserializeObject<List<AnomalyEngineMetadata>>(jsonString);
+                ViewBag.AnomalyEngines = JsonConvert.DeserializeObject<List<AnomalyEngineMetadata>>(jsonString);
             }
             else
             {

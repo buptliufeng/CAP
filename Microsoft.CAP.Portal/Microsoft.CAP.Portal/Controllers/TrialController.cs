@@ -27,12 +27,12 @@
             else
             {
                 ViewBag.AnomalyEngines = new List<AnomalyEngineMetadata>();
-                var loadEngineError= new ApiError
+                var loadEngineError = new ApiError
                 {
                     StatusCode = responseMessage.StatusCode.ToString(),
                     ErrorMessage = await responseMessage.Content.ReadAsStringAsync()
                 };
-                var javascriptSerializer=new JavaScriptSerializer();
+                var javascriptSerializer = new JavaScriptSerializer();
                 ViewBag.LoadEngineError = javascriptSerializer.Serialize(loadEngineError);
             }
             return View();
