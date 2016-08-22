@@ -20,10 +20,10 @@
     <div class="panel panel-info">
         <div class="panel-body form-horizontal">
             <div class="row">
-                <div class="col-md-7 ">
+                <div class="col-md-8 ">
                     <div class="form-group">
                         <div class="col-md-3">
-                            <label>DataSet:</label>
+                            <label class="control-label" style="text-align:left">DataSet:</label>
                             <!--button to open the modal-->
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#read-me-modal">ReadMe</button>
                         </div>
@@ -47,10 +47,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-md-12 form-inline">
-                            <label for="data-type">DataType:</label>
+                        <label class="col-xs-2 control-label" style="text-align:left" for="data-type">DataType:</label>
+                        <div class="col-xs-8">
                             <select class="form-control" id="data-type">
                                 <option value="1">Periodic</option>
                                 <option value="0">Unknown</option>
@@ -60,16 +60,16 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-md-12 form-inline">
-                            <label for="interval-seconds">DataIntervalSeconds:</label>
+                        <label class="col-xs-4 control-label" style="text-align:left" for="interval-seconds">DataIntervalSeconds:</label>
+                        <div class="col-xs-8">
                             <input class="form-control" id="interval-seconds" type="text" />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-md-12 form-inline">
-                            <label for="start-time">DetectionStartTime:</label>
+                        <label class="col-xs-4 control-label" style="text-align:left" for="start-time">DetectionStartTime:</label>
+                        <div class="col-xs-8">
                             <input class="form-control" id="start-time" type="text" disabled="disabled" />
                         </div>
                     </div>
