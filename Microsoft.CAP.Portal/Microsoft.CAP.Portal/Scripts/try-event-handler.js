@@ -10,13 +10,20 @@ function onCsvSelected(event) {
         var reader = new FileReader();
         reader.readAsText(selectedFile);
         reader.onload = function (readerEvent) {
-            tryDataSet = csvToArray(readerEvent.target.result);
+            try {
+                //load dataset
+                tryDataSet = csvToArray(readerEvent.target.result);
 
-            //dataset is loaded
-            if (tryDataSet.length >= 2) {
+                //check dataset validation
+                if (tryDataSet.length < 2) {
+                    throw new Error("Too little data");
+                }
                 var firstTimestamp = new Date(tryDataSet[0].Timestamp);
                 var secondTimestamp = new Date(tryDataSet[1].Timestamp);
                 var lastTimestamp = new Date(tryDataSet[tryDataSet.length - 1].Timestamp);
+                if (isNaN(firstTimestamp) || isNaN(secondTimestamp) || isNaN(lastTimestamp)) {
+                    throw new Error("Invalid date");
+                }
                 var intervalSecs = (secondTimestamp - firstTimestamp) / 1000;
 
                 $("#interval-seconds").val(intervalSecs);
@@ -30,7 +37,9 @@ function onCsvSelected(event) {
                 //show dataset
                 $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", tryDataSet, intervalSecs / 60));
             }
-
+            catch (e) {
+                alert("Invalid csv format\n" + e.message);
+            }
             var fullPath = $("#csv-selector").val();
             var csvName = fullPath.substring(fullPath.lastIndexOf("\\") + 1);
             $("#csv-name").val(csvName);
@@ -104,7 +113,7 @@ function onDataTypeChanged() {
 function csvToArray(csvText) {
     var dataSet = new Array();
     var rows = csvText.split(/\r\n|\n/);
-    for (rowIndex = 1; rowIndex < rows.length - 1; rowIndex++)//ignore table header and EOF
+    for (rowIndex = 1; rowIndex < rows.length; rowIndex++)//ignore table header
     {
         var colsPerRow = rows[rowIndex].split(/,|\t/);
         if (colsPerRow.length == 2) {
@@ -112,6 +121,10 @@ function csvToArray(csvText) {
                 Timestamp: colsPerRow[0],
                 Value: colsPerRow[1]
             });
+        }
+        else if (rowIndex < rows.length - 1)//ignore the last row
+        {
+            throw new Error("Not having two columns");
         }
     }
     return dataSet;
@@ -175,7 +188,7 @@ function onLoadClicked(event) {
                 updateTrialParams(localConfig.Parameters, trialNumStr);
             }
             catch (e) {
-                alert("JSON.parse() failed: " + e.message);
+                alert("Invalid json format\n" + e.message);
             }
 
             $("#trial-" + trialNumStr + "-load-btn").val("");//enable reloading file
