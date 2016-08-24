@@ -10,13 +10,20 @@ function onCsvSelected(event) {
         var reader = new FileReader();
         reader.readAsText(selectedFile);
         reader.onload = function (readerEvent) {
-            tryDataSet = csvToArray(readerEvent.target.result);
+            try {
+                //load dataset
+                tryDataSet = csvToArray(readerEvent.target.result);
 
-            //dataset is loaded
-            if (tryDataSet.length >= 2) {
+                //check dataset validation
+                if (tryDataSet.length < 2) {
+                    throw new Error("The dataset can't have only " + tryDataSet.length + " point");
+                }
                 var firstTimestamp = new Date(tryDataSet[0].Timestamp);
                 var secondTimestamp = new Date(tryDataSet[1].Timestamp);
                 var lastTimestamp = new Date(tryDataSet[tryDataSet.length - 1].Timestamp);
+                if (isNaN(firstTimestamp) || isNaN(secondTimestamp) || isNaN(lastTimestamp)) {
+                    throw new Error("Invalid date");
+                }
                 var intervalSecs = (secondTimestamp - firstTimestamp) / 1000;
 
                 $("#interval-seconds").val(intervalSecs);
@@ -25,12 +32,14 @@ function onCsvSelected(event) {
                 $("#start-time").datepicker("option", {
                     minDate: firstTimestamp,
                     maxDate: lastTimestamp
-                })
+                });
 
                 //show dataset
                 $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", tryDataSet, intervalSecs / 60));
             }
-
+            catch (e) {
+                alert("Invalid csv format\n" + e.message);
+            }
             var fullPath = $("#csv-selector").val();
             var csvName = fullPath.substring(fullPath.lastIndexOf("\\") + 1);
             $("#csv-name").val(csvName);
@@ -62,7 +71,7 @@ function onTryClicked(event) {
         Parameters: tryParams,
         DataSet: tryDataSet,
         DetectionStartTime: $("#start-time").val()
-    }
+    };
 
     $.ajax({
         url: tryUrl,
@@ -78,27 +87,7 @@ function onTryClicked(event) {
             var intervalMinutes = tryResponse.DataIntervalSeconds / 60;
             $("#trial-" + trialNumStr + "-chart").kendoStockChart(createChartParams("Trial " + trialNumStr, results, intervalMinutes));
 
-            $("#trial-" + trialNumStr + "-parameters").empty();
-            $.each(tryResponse.Parameters, function (key, val) {
-                var oneEditParam = $("<div/>", { "class": "form-group" });
-                oneEditParam.append($("<label/>", {
-                    "class": "col-xs-4 control-label",
-                    style: "text-align:left",
-                    "for": "trial-" + trialNumStr + "-" + key,
-                    text: key + ":"
-                }));
-                oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
-                    $("<input>", {
-                        "class": "form-control",
-                        id: "trial-" + trialNumStr + "-" + key,
-                        name: key,
-                        type: "text",
-                        value: val
-                    })
-                ));//parameter value for user to edit
-                oneEditParam.appendTo($("#trial-" + trialNumStr + "-parameters"));
-            });
-
+            updateTrialParams(tryResponse.Parameters, trialNumStr);
             $("#trial-" + trialNumStr + "-engine").val(tryResponse.EngineId);//show the default engine when user choose "any"
             $("#data-type").val(tryResponse.DataType);//update datatype
         },
@@ -124,7 +113,7 @@ function onDataTypeChanged() {
 function csvToArray(csvText) {
     var dataSet = new Array();
     var rows = csvText.split(/\r\n|\n/);
-    for (rowIndex = 1; rowIndex < rows.length - 1; rowIndex++)//ignore table header and EOF
+    for (rowIndex = 1; rowIndex < rows.length; rowIndex++)//ignore table header
     {
         var colsPerRow = rows[rowIndex].split(/,|\t/);
         if (colsPerRow.length == 2) {
@@ -132,6 +121,10 @@ function csvToArray(csvText) {
                 Timestamp: colsPerRow[0],
                 Value: colsPerRow[1]
             });
+        }
+        else if (rowIndex < rows.length - 1)//ignore the last row
+        {
+            throw new Error("Row " + rowIndex + " doesn't have 2 columns");
         }
     }
     return dataSet;
@@ -155,3 +148,74 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
     alert(jqxhr.statusText + "\n" + errorText);
 });
+
+function onSaveClicked(event) {
+    var trialNumStr = event.data.trialNumStr;
+
+    var historyParams = new Object();
+    $("#trial-" + trialNumStr + "-parameters").find("input").each(function () {
+        historyParams[this.name] = this.value;
+    })
+    var config = {
+        DataType: $("#data-type").val(),
+        DataIntervalSeconds: $("#interval-seconds").val(),
+        DetectionStartTime: $("#start-time").val(),
+        EngineId: $("#trial-" + trialNumStr + "-engine").val(),
+        Parameters: historyParams
+    };
+
+    //save config locally
+    var configBlob = new Blob([JSON.stringify(config)], { type: "application/json" });
+    var csvName = $("#csv-name").val();
+    var defaultName = csvName.substring(0, csvName.lastIndexOf(".")) + ".json";//replace ".csv" with ".json" to form a default name 
+    window.navigator.msSaveBlob(configBlob, defaultName);
+}
+
+function onLoadClicked(event) {
+    var selectedFile = event.target.files[0];
+    if (selectedFile) {
+        var trialNumStr = event.data.trialNumStr;
+        var reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = function (readerEvent) {
+            try {
+                //load saved config
+                var localConfig = JSON.parse(readerEvent.target.result);
+                $("#data-type").val(localConfig.DataType);
+                $("#interval-seconds").val(localConfig.DataIntervalSeconds);
+                $("#start-time").val(localConfig.DetectionStartTime);
+                $("#trial-" + trialNumStr + "-engine").val(localConfig.EngineId);
+                updateTrialParams(localConfig.Parameters, trialNumStr);
+            }
+            catch (e) {
+                alert("Invalid json format\n" + e.message);
+            }
+
+            $("#trial-" + trialNumStr + "-load-btn").val("");//enable reloading file
+        };
+    }
+}
+
+function updateTrialParams(params, trialNumStr) {
+    $("#trial-" + trialNumStr + "-parameters").empty();
+    $.each(params, function (key, val) {
+        var oneEditParam = $("<div/>", { "class": "form-group" });
+        oneEditParam.append($("<div/>", { "class": "col-xs-5" }).append(
+            $("<label/>", {
+                "class": "control-label",
+                "for": "trial-" + trialNumStr + "-" + key,
+                text: key + ":"
+            })
+        ));
+        oneEditParam.append($("<div/>", { "class": "col-xs-7" }).append(
+            $("<input>", {
+                "class": "form-control",
+                id: "trial-" + trialNumStr + "-" + key,
+                name: key,
+                type: "text",
+                value: val
+            })
+        ));//parameter value for user to edit
+        oneEditParam.appendTo($("#trial-" + trialNumStr + "-parameters"));
+    });
+}

@@ -22,7 +22,9 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" style="text-align:left" for="stream-id">Stream:</label>
+                        <div class="col-xs-2">
+                            <label class="control-label" for="stream-id">Stream:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="stream-id" type="text" style="max-width:none" />
                         </div>
@@ -30,7 +32,9 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" style="text-align:left" for="from-datepicker">From:</label>
+                        <div class="col-xs-2">
+                            <label class="control-label" for="from-datepicker">From:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="from-datepicker" type="text" />
                         </div>
@@ -38,7 +42,9 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" style="text-align:left" for="to-datepicker">To:</label>
+                        <div class="col-xs-2">
+                            <label class="control-label" for="to-datepicker">To:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="to-datepicker" type="text" />
                         </div>
@@ -48,7 +54,9 @@
             <div class="row" id="stream-info" style="display:none">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" style="text-align:left" for="data-type">DataType:</label>
+                        <div class="col-xs-2">
+                            <label class="control-label" for="data-type">Data Type:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="data-type" readonly="readonly" />
                         </div>
@@ -56,7 +64,9 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="col-xs-4 control-label" style="text-align:left" for="interval-seconds">DataIntervalSeconds:</label>
+                        <div class="col-xs-4">
+                            <label class="control-label" for="interval-seconds">Data Interval Seconds:</label>
+                        </div>
                         <div class="col-xs-8">
                             <input class="form-control" id="interval-seconds" type="text" readonly="readonly" />
                         </div>
@@ -78,8 +88,10 @@
         <div class="panel panel-primary">
             <div class="panel-body form-horizontal">
                 <div class="form-group">
-                    <label class="col-xs-4 control-label" style="text-align:left" for="engine-id">Engine:</label>
-                    <div class="col-xs-8">
+                    <div class="col-xs-5">
+                        <label class="control-label" for="engine-id">Engine:</label>
+                    </div>
+                    <div class="col-xs-7">
                         <select class="form-control" id="engine-id">
                             <option value="any">any</option>
                             @{
@@ -91,8 +103,10 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn-get-history" style="margin-bottom:15px">Get History Result</button>
-                <div id="parameters-in-system"></div>
+                <div class="form-group">
+                    <button class="btn btn-primary col-xs-offset-2 col-xs-8" id="btn-get-history">Get History Result</button>
+                </div>
+                <div class="scrollable-part" id="parameters-in-system"></div>
             </div>
         </div>
     </div>
@@ -110,21 +124,25 @@
         <div class="panel panel-success">
             <div class="panel-heading" style="text-align:center">Tuning</div>
             <div class="panel-body form-horizontal">
-                <div class="form-group" style="display:none">
-                    <label class="col-xs-4 control-label" style="text-align:left" for="tune-engine-id">Engine:</label>
-                    <div class="col-xs-8">
-                        <select class="form-control" id="tune-engine-id">
-                            @{
-                                foreach (var engine in ViewBag.AnomalyEngines)
-                                {
-                                    <option value="@engine.EngineId">@engine.Description</option>
+                <div class="scrollable-part">
+                    <div class="form-group" style="display:none">
+                        <div class="col-xs-5">
+                            <label class="control-label" for="tune-engine-id">Engine:</label>
+                        </div>
+                        <div class="col-xs-7">
+                            <select class="form-control" id="tune-engine-id">
+                                @{
+                                    foreach (var engine in ViewBag.AnomalyEngines)
+                                    {
+                                        <option value="@engine.EngineId">@engine.Description</option>
+                                    }
                                 }
-                            }
-                        </select>
+                            </select>
+                        </div>
                     </div>
+                    <!--to append parameters-->
+                    <div id="parameters-for-tuning"></div>
                 </div>
-                <!--to append parameters-->
-                <div id="parameters-for-tuning"></div>
 
                 <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn-tune" style="margin-bottom:35px" disabled="disabled">Tune</button>
                 <button class="btn btn-warning col-xs-offset-2 col-xs-8" id="btn-save" disabled="disabled">Save</button>
