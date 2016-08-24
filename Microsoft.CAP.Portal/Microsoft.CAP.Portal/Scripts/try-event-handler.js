@@ -16,7 +16,7 @@ function onCsvSelected(event) {
 
                 //check dataset validation
                 if (tryDataSet.length < 2) {
-                    throw new Error("Too little data");
+                    throw new Error("The dataset can't have only " + tryDataSet.length + " point");
                 }
                 var firstTimestamp = new Date(tryDataSet[0].Timestamp);
                 var secondTimestamp = new Date(tryDataSet[1].Timestamp);
@@ -124,7 +124,7 @@ function csvToArray(csvText) {
         }
         else if (rowIndex < rows.length - 1)//ignore the last row
         {
-            throw new Error("Not having two columns");
+            throw new Error("Row " + rowIndex + " doesn't have 2 columns");
         }
     }
     return dataSet;
