@@ -156,13 +156,14 @@ function updateParamsForTuning(response) {
 
     $.each(response.Parameters, function (key, val) {
         var oneEditParam = $("<div/>", { "class": "form-group" });
-        oneEditParam.append($("<label/>", {
-            "class": "col-xs-4 control-label",
-            style: "text-align:left",
-            "for": key,
-            text: key + ":"
-        }));
-        oneEditParam.append($("<div/>", { "class": "col-xs-8" }).append(
+        oneEditParam.append($("<div/>", { "class": "col-xs-5" }).append(
+            $("<label/>", {
+                "class": "control-label",
+                "for": key,
+                text: key + ":"
+            })
+        ));
+        oneEditParam.append($("<div/>", { "class": "col-xs-7" }).append(
             $("<input>", {
                 "class": "form-control",
                 id: key,
@@ -179,12 +180,13 @@ function showParamsInSystem(response) {
 
     $.each(response.Parameters, function (key, val) {
         var oneDisplayParam = $("<div/>", { "class": "form-group" });
-        oneDisplayParam.append($("<label/>", {
-            "class": "col-xs-4 control-label",
-            style: "text-align:left",
-            text: key + ":"
-        }));//display parameter name
-        oneDisplayParam.append($("<div/>", { "class": "col-xs-8" }).append(
+        oneDisplayParam.append($("<div/>", { "class": "col-xs-5" }).append(
+            $("<label/>", {
+                "class": "control-label",
+                text: key + ":"
+            })
+        ));//display parameter name
+        oneDisplayParam.append($("<div/>", { "class": "col-xs-7" }).append(
             $("<input>", {
                 "class": "form-control",
                 type: "text",

@@ -22,6 +22,21 @@
     z-index: 1; /*top*/
 }
 
+label {
+    word-wrap: break-word;/*allow breaking lines within words*/
+}
+
+.control-label {
+    text-align: left;
+}
+
+/*add a scroll bar when there are too many parameters*/
+.scrollable-part {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
