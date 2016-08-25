@@ -23,11 +23,11 @@
 }
 
 label {
-    word-wrap: break-word;/*allow breaking lines within words*/
+    word-wrap: break-word; /*allow breaking lines within words*/
 }
 
 .control-label {
-    text-align: left;
+    text-align: left !important;
 }
 
 /*add a scroll bar when there are too many parameters*/

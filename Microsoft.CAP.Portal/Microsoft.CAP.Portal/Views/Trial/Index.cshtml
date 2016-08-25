@@ -25,7 +25,7 @@
                         <div class="col-md-3">
                             <label class="control-label">Data Set:</label>
                             <!--button to open the modal-->
-                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#read-me-modal">Read Me</button>
+                            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#read-me-modal">Read Me</button>
                         </div>
                         <div class="col-md-9">
                             <div class="input-group">
@@ -49,10 +49,10 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-xs-2">
+                        <div class="col-xs-4">
                             <label class="control-label" for="data-type">Data Type:</label>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-xs-6">
                             <select class="form-control" id="data-type">
                                 <option value="1">Periodic</option>
                                 <option value="0">Unknown</option>
@@ -62,20 +62,20 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-xs-4">
+                        <div class="col-xs-5">
                             <label class="control-label" for="interval-seconds">Data Interval Seconds:</label>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-xs-6">
                             <input class="form-control" id="interval-seconds" type="text" />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <div class="col-xs-4">
+                        <div class="col-xs-5">
                             <label class="control-label" for="start-time">Detection Start Time:</label>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-xs-6">
                             <input class="form-control" id="start-time" type="text" disabled="disabled" />
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 <div class="form-group">
                     <div class="col-xs-offset-2 col-xs-8">
                         <div class="btn-group btn-group-justified">
-                            <label class="btn btn-primary" data-toggle="tooltip" title="Load previously tried parameters from a local json file">
+                            <label class="btn btn-primary" style="border-right-color:white" data-toggle="tooltip" title="Load previously tried parameters from a local json file">
                                 <!--form a select file button with style-->
                                 Load
                                 <input id="trial-one-load-btn" type="file" style="display:none" />
@@ -156,7 +156,7 @@
                 <div class="form-group">
                     <div class="col-xs-offset-2 col-xs-8">
                         <div class="btn-group btn-group-justified">
-                            <label class="btn btn-primary" data-toggle="tooltip" title="Load previously tried parameters from a local json file">
+                            <label class="btn btn-primary" style="border-right-color:white" data-toggle="tooltip" title="Load previously tried parameters from a local json file">
                                 <!--form a select file button with style-->
                                 Load
                                 <input id="trial-two-load-btn" type="file" style="display:none" />
