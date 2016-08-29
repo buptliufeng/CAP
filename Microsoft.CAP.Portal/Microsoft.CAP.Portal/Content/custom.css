@@ -37,6 +37,11 @@ label {
     overflow-x: hidden;
 }
 
+.crystal-btn { /*hold glyphicon*/
+    background: none;
+    border: 0;
+}
+
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);

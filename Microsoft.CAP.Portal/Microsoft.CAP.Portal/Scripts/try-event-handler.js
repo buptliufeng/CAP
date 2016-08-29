@@ -159,7 +159,6 @@ function onSaveClicked(event) {
     var config = {
         DataType: $("#data-type").val(),
         DataIntervalSeconds: $("#interval-seconds").val(),
-        DetectionStartTime: $("#start-time").val(),
         EngineId: $("#trial-" + trialNumStr + "-engine").val(),
         Parameters: historyParams
     };
@@ -171,7 +170,7 @@ function onSaveClicked(event) {
     window.navigator.msSaveBlob(configBlob, defaultName);
 }
 
-function onLoadClicked(event) {
+function onJsonSelected(event) {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
         var trialNumStr = event.data.trialNumStr;
@@ -183,7 +182,6 @@ function onLoadClicked(event) {
                 var localConfig = JSON.parse(readerEvent.target.result);
                 $("#data-type").val(localConfig.DataType);
                 $("#interval-seconds").val(localConfig.DataIntervalSeconds);
-                $("#start-time").val(localConfig.DetectionStartTime);
                 $("#trial-" + trialNumStr + "-engine").val(localConfig.EngineId);
                 updateTrialParams(localConfig.Parameters, trialNumStr);
             }
@@ -191,7 +189,7 @@ function onLoadClicked(event) {
                 alert("Invalid json format\n" + e.message);
             }
 
-            $("#trial-" + trialNumStr + "-load-btn").val("");//enable reloading file
+            $("#trial-" + trialNumStr + "-load-input").val("");//enable reloading file
         };
     }
 }
