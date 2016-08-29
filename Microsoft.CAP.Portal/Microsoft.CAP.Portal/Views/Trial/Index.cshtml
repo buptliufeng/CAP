@@ -34,7 +34,7 @@
                                     <label class="btn btn-primary">
                                         <!--form a select file button with style-->
                                         Browse
-                                        <input id="csv-selector" type="file" style="display:none" />
+                                        <input id="csv-selector" type="file" style="display:none" accept=".csv"/>
                                     </label>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
             <div class="panel-body form-horizontal">
                 <!--Load and Save-->
                 <div class="form-group" style="text-align:right">
-                    <input type="file" id="trial-one-load-input" style="display:none" /><!--triggered by clicking on Load button-->
+                    <input type="file" id="trial-one-load-input" style="display:none" accept=".json"/><!--triggered by clicking on Load button-->
                     <button class="btn crystal-btn" onclick="$('#trial-one-load-input').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file">
                         <span class="glyphicon glyphicon-open"></span>Load
                     </button>
@@ -152,7 +152,7 @@
             <div class="panel-body form-horizontal">
                 <!--Load and Save-->
                 <div class="form-group" style="text-align:right">
-                    <input type="file" id="trial-two-load-input" style="display:none" /><!--triggered by clicking on Load button-->
+                    <input type="file" id="trial-two-load-input" style="display:none" accept=".json"/><!--triggered by clicking on Load button-->
                     <button class="btn crystal-btn" onclick="$('#trial-two-load-input').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file">
                         <span class="glyphicon glyphicon-open"></span>Load
                     </button>
