@@ -119,11 +119,21 @@
         <div class="loading-icon" id="tuning-result-loader" style="display:none"></div>
         <div id="tuning-result-chart"></div>
     </div>
-
     <div class="col-md-4">
         <div class="panel panel-success">
             <div class="panel-heading" style="text-align:center">Tuning</div>
             <div class="panel-body form-horizontal">
+                <!--Load and Save-->
+                <div class="form-group" style="text-align:right">
+                    <input type="file" id="input-load" style="display:none" /><!--triggered by clicking on Load button-->
+                    <button class="btn crystal-btn" id="btn-load" onclick="$('#input-load').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file" disabled="disabled">
+                        <span class="glyphicon glyphicon-open"></span>Load
+                    </button>
+                    |<!--a divider-->
+                    <button class="btn crystal-btn" id="btn-save-local" data-toggle="tooltip" data-trigger="hover" title="Save parameters as a local json file" disabled="disabled">
+                        <span class="glyphicon glyphicon-save"></span>Save to local
+                    </button>
+                </div>
                 <div class="scrollable-part">
                     <div class="form-group" style="display:none">
                         <div class="col-xs-5">
@@ -145,7 +155,7 @@
                 </div>
 
                 <button class="btn btn-success col-xs-offset-2 col-xs-8" id="btn-tune" style="margin-bottom:35px" disabled="disabled">Tune</button>
-                <button class="btn btn-warning col-xs-offset-2 col-xs-8" id="btn-save" disabled="disabled">Save</button>
+                <button class="btn btn-warning col-xs-offset-2 col-xs-8" id="btn-save-cap" disabled="disabled">Save to CAP</button>
             </div>
             <!--to show success info-->
             <div id="save-success-text" style="text-align:center;font-size:small"></div>
@@ -182,6 +192,9 @@
 
             $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", null, null));
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
+
+            //show tooltip for load, save to local
+            $('[data-toggle="tooltip"]').tooltip({container:"body"});
         });
 
         //refresh when the window size change
@@ -198,6 +211,8 @@
 
         $("#btn-get-history").on("click", onGetClicked);
         $("#btn-tune").on("click", onTuneClicked);
-        $("#btn-save").on("click", onSaveClicked);
+        $("#btn-save-cap").on("click", onSaveToCapClicked);
+        $("#input-load").on("change",onLocalParamLoaded);
+        $("#btn-save-local").on("click",onSaveToLocalClicked);
     </script>
 }

@@ -1,6 +1,6 @@
 ﻿var getResponse = null;
 var tuneResponse = null;
-var dataTypeMap = ["Unknown", "Periodic"];
+var dataTypeMapArray = ["Unknown", "Periodic"];
 
 function onGetClicked() {
     var getRequest = {
@@ -31,18 +31,20 @@ function onGetClicked() {
 
             //initialize tune part
             $("#btn-tune").prop("disabled", false);
-            $("#btn-save").prop("disabled", true);
+            $("#btn-load").prop("disabled", false);
+            $("#btn-save-local").prop("disabled", false);
+            $("#btn-save-cap").prop("disabled", true);
             $("#save-success-text").empty();
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
 
-            showParamsInSystem(getResponse);
-            updateParamsForTuning(getResponse);
+            showParamsInSystem(getResponse.Parameters);
+            updateParamsForTuning(getResponse.Parameters);
 
             $("#engine-id").val(getResponse.EngineId);
             $("#tune-engine-id").parents(".form-group").show();
             $("#tune-engine-id").val(getResponse.EngineId);
 
-            $("#data-type").val(dataTypeMap[getResponse.DataType]);
+            $("#data-type").val(dataTypeMapArray[getResponse.DataType]);
             $("#interval-seconds").val(getResponse.DataIntervalSeconds);
             $("#stream-info").show();
         },
@@ -89,10 +91,10 @@ function onTuneClicked() {
             var intervalMinutes = tuneResponse.DataIntervalSeconds / 60;
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", results, intervalMinutes));
 
-            updateParamsForTuning(tuneResponse);
+            updateParamsForTuning(tuneResponse.Parameters);
 
             //enable save
-            $("#btn-save").prop("disabled", false);
+            $("#btn-save-cap").prop("disabled", false);
             $("#save-success-text").empty();
         },
         complete: function () {
@@ -103,16 +105,16 @@ function onTuneClicked() {
 
 }
 
-function onSaveClicked() {
+function onSaveToCapClicked() {
     var saveOk = confirm("The parameters will be saved to CAP system and affect future detection.\nAre you sure you want to save?");
     if (saveOk) {
-        onSaveConfirmed();
+        onSaveToCapConfirmed();
     }
 }
 
-function onSaveConfirmed() {
+function onSaveToCapConfirmed() {
     $("#tuning-result-loader").show();
-    $("#btn-save").prop("disabled", true);//avoid user's repetitive click
+    $("#btn-save-cap").prop("disabled", true);//avoid user's repetitive click
 
     var saveRequest = {
         StreamId: tuneResponse.StreamId,
@@ -134,7 +136,7 @@ function onSaveConfirmed() {
         },
         complete: function () {
             $("#tuning-result-loader").hide();
-            $("#btn-save").prop("disabled", false);
+            $("#btn-save-cap").prop("disabled", false);
         }
     })
 }
@@ -151,10 +153,10 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     alert(jqxhr.statusText + "\n" + errorText);
 });
 
-function updateParamsForTuning(response) {
+function updateParamsForTuning(params) {
     $("#parameters-for-tuning").empty();
 
-    $.each(response.Parameters, function (key, val) {
+    $.each(params, function (key, val) {
         var oneEditParam = $("<div/>", { "class": "form-group" });
         oneEditParam.append($("<div/>", { "class": "col-xs-5" }).append(
             $("<label/>", {
@@ -175,10 +177,10 @@ function updateParamsForTuning(response) {
     });
 }
 
-function showParamsInSystem(response) {
+function showParamsInSystem(params) {
     $("#parameters-in-system").empty();
 
-    $.each(response.Parameters, function (key, val) {
+    $.each(params, function (key, val) {
         var oneDisplayParam = $("<div/>", { "class": "form-group" });
         oneDisplayParam.append($("<div/>", { "class": "col-xs-5" }).append(
             $("<label/>", {
@@ -196,4 +198,45 @@ function showParamsInSystem(response) {
         ));//display parameter value
         oneDisplayParam.appendTo($("#parameters-in-system"));
     });
+}
+
+function onLocalParamLoaded(event) {
+    var selectedFile = event.target.files[0];
+    if (selectedFile) {
+        var reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = function (readerEvent) {
+            try {
+                //load saved config
+                var localConfig = JSON.parse(readerEvent.target.result);
+                $("#data-type").val(dataTypeMapArray[localConfig.DataType]);
+                $("#interval-seconds").val(localConfig.DataIntervalSeconds);
+                $("#tune-engine-id").val(localConfig.EngineId);
+                updateParamsForTuning(localConfig.Parameters);
+            }
+            catch (e) {
+                alert("Invalid json format\n" + e.message);
+            }
+
+            $("#input-load").val("");//enable reloading file
+        };
+    }
+}
+
+function onSaveToLocalClicked() {
+    var historyParams = new Object();
+    $("#parameters-for-tuning").find("input").each(function () {
+        historyParams[this.id] = this.value;
+    })
+    var config = {
+        DataType: dataTypeMapArray.indexOf($("#data-type").val()),//inverse operation of dataTypeMap
+        DataIntervalSeconds: $("#interval-seconds").val(),
+        EngineId: $("#tune-engine-id").val(),
+        Parameters: historyParams
+    };
+
+    //save config locally
+    var configBlob = new Blob([JSON.stringify(config)], { type: "application/json" });
+    var defaultName = $("#stream-id").val() + ".json";
+    window.navigator.msSaveBlob(configBlob, defaultName);
 }
