@@ -200,7 +200,7 @@ function showParamsInSystem(params) {
     });
 }
 
-function onJsonSelected(event) {
+function onLocalParamLoaded(event) {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
         var reader = new FileReader();

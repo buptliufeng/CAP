@@ -170,7 +170,7 @@ function onSaveClicked(event) {
     window.navigator.msSaveBlob(configBlob, defaultName);
 }
 
-function onJsonSelected(event) {
+function onLocalParamLoaded(event) {
     var selectedFile = event.target.files[0];
     if (selectedFile) {
         var trialNumStr = event.data.trialNumStr;

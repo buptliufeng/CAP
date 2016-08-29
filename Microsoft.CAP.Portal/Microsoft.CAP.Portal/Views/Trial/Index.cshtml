@@ -288,10 +288,10 @@
         $("#data-type").on("change", onDataTypeChanged);
         $("#trial-one-btn").on("click", { trialNumStr: "one" }, onTryClicked);
         $("#trial-one-save-btn").on("click",{ trialNumStr: "one" },onSaveClicked);
-        $("#trial-one-load-input").on("change",{ trialNumStr: "one" },onJsonSelected);
+        $("#trial-one-load-input").on("change",{ trialNumStr: "one" },onLocalParamLoaded);
         $("#trial-two-btn").on("click", { trialNumStr: "two" }, onTryClicked);
         $("#trial-two-save-btn").on("click",{ trialNumStr: "two" },onSaveClicked);
-        $("#trial-two-load-input").on("change",{ trialNumStr: "two" },onJsonSelected);
+        $("#trial-two-load-input").on("change",{ trialNumStr: "two" },onLocalParamLoaded);
     </script>
 }
 
