@@ -183,6 +183,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Example\try-tuning.csv" />
     <None Include="Properties\PublishProfiles\capui - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\capui-int - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
@@ -224,7 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

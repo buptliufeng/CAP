@@ -23,7 +23,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-xs-3">
-                            <label class="control-label" for="stream-id">Stream:</label>
+                            <label class="control-label" for="stream-id" data-toggle="tooltip" title="The stream id got from CAP team after you officially onboard. Or you can turn to Trial page to have a try">Stream:</label>
                         </div>
                         <div class="col-xs-9">
                             <input class="form-control" id="stream-id" type="text" style="max-width:none" />
@@ -65,7 +65,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="interval-seconds">Data Interval Seconds:</label>
+                            <label class="control-label" for="interval-seconds">Data Granularity (seconds):</label>
                         </div>
                         <div class="col-xs-6">
                             <input class="form-control" id="interval-seconds" type="text" readonly="readonly" />
@@ -89,11 +89,11 @@
             <div class="panel-body form-horizontal">
                 <div class="form-group">
                     <div class="col-xs-5">
-                        <label class="control-label" for="engine-id">Engine:</label>
+                        <label class="control-label" for="engine-id" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
                     </div>
                     <div class="col-xs-7">
                         <select class="form-control" id="engine-id">
-                            <option value="any">any</option>
+                            <option value="any">default</option>
                             @{
                                 foreach (var engine in ViewBag.AnomalyEngines)
                                 {
@@ -125,7 +125,7 @@
             <div class="panel-body form-horizontal">
                 <!--Load and Save-->
                 <div class="form-group" style="text-align:right">
-                    <input type="file" id="input-load" style="display:none" accept=".json"/><!--triggered by clicking on Load button-->
+                    <input type="file" id="input-load" style="display:none" accept=".json" /><!--triggered by clicking on Load button-->
                     <button class="btn crystal-btn" id="btn-load" onclick="$('#input-load').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file" disabled="disabled">
                         <span class="glyphicon glyphicon-open"></span>Load
                     </button>
@@ -137,7 +137,7 @@
                 <div class="scrollable-part">
                     <div class="form-group" style="display:none">
                         <div class="col-xs-5">
-                            <label class="control-label" for="tune-engine-id">Engine:</label>
+                            <label class="control-label" for="tune-engine-id" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
                         </div>
                         <div class="col-xs-7">
                             <select class="form-control" id="tune-engine-id">
@@ -193,7 +193,7 @@
             $("#detection-history-chart").kendoStockChart(createChartParams("Detection Result", null, null));
             $("#tuning-result-chart").kendoStockChart(createChartParams("Tuning Result", null, null));
 
-            //show tooltip for load, save to local
+            //show tooltip
             $('[data-toggle="tooltip"]').tooltip({container:"body"});
         });
 

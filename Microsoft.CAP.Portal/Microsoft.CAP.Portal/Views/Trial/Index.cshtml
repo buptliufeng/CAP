@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="~/Content/custom.css" />
 
 <div class="alert alert-info" style="margin:15px">
-    <h4>Usage: Upload a local CSV file to detect anomalies. You can run 2 sets of trials with different param for comparison</h4>
+    <h4>Usage: Try our anomaly detection engines before you officially onboard, you can do side by side comparison with different set of parameters.</h4>
 </div>
 
 <div class="row" style="margin:15px">
@@ -23,7 +23,7 @@
                 <div class="col-md-8 ">
                     <div class="form-group">
                         <div class="col-md-3">
-                            <label class="control-label">Data Set:</label>
+                            <label class="control-label">Time Series:</label>
                             <!--button to open the modal-->
                             <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#read-me-modal">Read Me</button>
                         </div>
@@ -34,7 +34,7 @@
                                     <label class="btn btn-primary">
                                         <!--form a select file button with style-->
                                         Browse
-                                        <input id="csv-selector" type="file" style="display:none" accept=".csv"/>
+                                        <input id="csv-selector" type="file" style="display:none" accept=".csv" />
                                     </label>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-xs-4">
-                            <label class="control-label" for="data-type">Data Type:</label>
+                            <label class="control-label" for="data-type" data-toggle="tooltip" title="If your time series is periodic, choose periodic. Otherwise, choose unknown and CAP will detect the data type for you">Data Type:</label>
                         </div>
                         <div class="col-xs-6">
                             <select class="form-control" id="data-type">
@@ -63,7 +63,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="interval-seconds">Data Interval Seconds:</label>
+                            <label class="control-label" for="interval-seconds" data-toggle="tooltip" title="The interval seconds between two data points">Data Granularity (seconds):</label>
                         </div>
                         <div class="col-xs-6">
                             <input class="form-control" id="interval-seconds" type="text" />
@@ -96,7 +96,7 @@
             <div class="panel-body form-horizontal">
                 <!--Load and Save-->
                 <div class="form-group" style="text-align:right">
-                    <input type="file" id="trial-one-load-input" style="display:none" accept=".json"/><!--triggered by clicking on Load button-->
+                    <input type="file" id="trial-one-load-input" style="display:none" accept=".json" /><!--triggered by clicking on Load button-->
                     <button class="btn crystal-btn" onclick="$('#trial-one-load-input').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file">
                         <span class="glyphicon glyphicon-open"></span>Load
                     </button>
@@ -108,11 +108,11 @@
                 <div class="scrollable-part">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="trial-one-engine">Engine:</label>
+                            <label class="control-label" for="trial-one-engine" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
                         </div>
                         <div class="col-xs-7">
                             <select class="form-control" id="trial-one-engine">
-                                <option value="">any</option>
+                                <option value="">default</option>
                                 @{
                                     foreach (var engine in ViewBag.AnomalyEngines)
                                     {
@@ -125,7 +125,7 @@
                     <div id="trial-one-parameters">
                         <div class="form-group">
                             <div class="col-xs-5">
-                                <label class="control-label" for="trial-one-DataPeriod" data-toggle="tooltip" title="Unit: data points">DataPeriod:</label>
+                                <label class="control-label" for="trial-one-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle">DataPeriod:</label>
                             </div>
                             <div class="col-xs-7">
                                 <input class="form-control" id="trial-one-DataPeriod" name="DataPeriod" />
@@ -152,7 +152,7 @@
             <div class="panel-body form-horizontal">
                 <!--Load and Save-->
                 <div class="form-group" style="text-align:right">
-                    <input type="file" id="trial-two-load-input" style="display:none" accept=".json"/><!--triggered by clicking on Load button-->
+                    <input type="file" id="trial-two-load-input" style="display:none" accept=".json" /><!--triggered by clicking on Load button-->
                     <button class="btn crystal-btn" onclick="$('#trial-two-load-input').click()" data-toggle="tooltip" data-trigger="hover" title="Load previously tried parameters from a local json file">
                         <span class="glyphicon glyphicon-open"></span>Load
                     </button>
@@ -164,11 +164,11 @@
                 <div class="scrollable-part">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="trial-two-engine">Engine:</label>
+                            <label class="control-label" for="trial-two-engine" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
                         </div>
                         <div class="col-xs-7">
                             <select class="form-control" id="trial-two-engine">
-                                <option value="">any</option>
+                                <option value="">default</option>
                                 @{
                                     foreach (var engine in ViewBag.AnomalyEngines)
                                     {
@@ -181,7 +181,7 @@
                     <div id="trial-two-parameters">
                         <div class="form-group">
                             <div class="col-xs-5">
-                                <label class="control-label" for="trial-two-DataPeriod" data-toggle="tooltip" title="Unit: data points">DataPeriod:</label>
+                                <label class="control-label" for="trial-two-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle">DataPeriod:</label>
                             </div>
 
                             <div class="col-xs-7">
@@ -207,7 +207,10 @@
             </div>
             <div class="modal-body">
                 <h4>Here you should upload a CSV file containing 2 columns (with header).</h4>
-                <h4><b>Example:</b></h4>
+                <h4>
+                    <b>Example:</b>
+                    <a class="btn btn-sm btn-success" href="~/Example/try-tuning.csv" download="">click here to download</a><!--csv example for download-->
+                </h4>
                 <table class="table table-bordered table-condensed">
                     <tr>
                         <th>Timestamp</th>
@@ -230,11 +233,11 @@
                         <td>Format: Double</td>
                     </tr>
                 </table>
-                <h4><b>Attention:</b></h4>
+                <h4><b>Input data requirements for time series anomaly detection for this trial site:</b></h4>
                 <ul>
-                    <li><h4>Must be a complete set without missing data.</h4></li>
-                    <li><h4>Data set includes training data and detection data. DetectionStartTime must be within the time range of DataSet, data before this time will be used for training, data starting from this time will be used for detection.</h4> </li>
-                    <li><h4>To make a successful request, the training data should contain at least 4 DataPeriod cycles for Periodic stream, or at least 28 days for Unknown DataType. </h4></li>
+                    <li><h4>Data needs to be complete with chosen granularity without any missing data points.</h4></li>
+                    <li><h4>The training data should contain at least 4 DataPeriod cycles for Periodical time series, or at least 28 days for Unknown DataType.</h4> </li>
+                    <li><h4>Time series dataset should include training data and detection data. DetectionStartTime are the time which separate the training data and detection data, therefore, please make sure data points before DetectionStartTime satisfy the two requirements above.</h4></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -268,7 +271,7 @@
             $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", null, null));
             $("#trial-two-chart").kendoStockChart(createChartParams("Trial two", null, null));
 
-            //show tooltip for dataperiod(at first), load, save to local
+            //show tooltip
             $('[data-toggle="tooltip"]').tooltip({container:"body"});
         });
 
