@@ -112,7 +112,7 @@ function onDataTypeChanged() {
 
 function csvToArray(csvText) {
     var dataSet = new Array();
-    var rows = csvText.split(/\r\n|\n/);
+    var rows = csvText.split(/\r\n|\n|\r/);
     for (rowIndex = 1; rowIndex < rows.length; rowIndex++)//ignore table header
     {
         var colsPerRow = rows[rowIndex].split(/,|\t/);
