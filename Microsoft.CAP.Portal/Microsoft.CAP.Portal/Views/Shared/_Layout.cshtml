@@ -23,6 +23,7 @@
                 <ul class="nav navbar-nav" style="font-size:20px">
                     <li>@Html.ActionLink("Tuning", "Index", "Tuning")</li>
                     <li>@Html.ActionLink("Trial", "Index", "Trial")</li>
+                    <li><a target="_blank" href="http://dqp-portal/en-us/documentation/monitoring/MetricsMonitoring/CAPHelpPage">Help</a></li>
                 </ul>
             </div>
         </div>
@@ -30,9 +31,9 @@
     <div class="container-fluid body-content">
         @RenderBody()
         @*<hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year -xxx</p>
-            </footer>*@
+        <footer>
+            <p>&copy; @DateTime.Now.Year -xxx</p>
+        </footer>*@
     </div>
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
