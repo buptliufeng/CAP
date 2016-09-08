@@ -108,7 +108,7 @@
                 <div class="scrollable-part">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="trial-one-engine" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
+                            <label class="control-label" for="trial-one-engine" data-toggle="tooltip" title="For more information about the engines, please go to the Help page on the top navigation bar">Engine:</label>
                         </div>
                         <div class="col-xs-7">
                             <select class="form-control" id="trial-one-engine">
@@ -164,7 +164,7 @@
                 <div class="scrollable-part">
                     <div class="form-group">
                         <div class="col-xs-5">
-                            <label class="control-label" for="trial-two-engine" data-toggle="tooltip" title="Click Help on the navbar to link to a help page for more infomation about the engines">Engine:</label>
+                            <label class="control-label" for="trial-two-engine" data-toggle="tooltip" title="For more information about the engines, please go to the Help page on the top navigation bar">Engine:</label>
                         </div>
                         <div class="col-xs-7">
                             <select class="form-control" id="trial-two-engine">
@@ -209,7 +209,7 @@
                 <h4>Here you should upload a CSV file containing 2 columns (with header).</h4>
                 <h4>
                     <b>Example:</b>
-                    <a class="btn btn-sm btn-success" href="~/Example/try-tuning.csv" download="">click here to download</a><!--csv example for download-->
+                    <a class="btn btn-sm btn-success" href="~/Example/try-tuning.csv" download="">click to download a sample CSV</a><!--csv example for download-->
                 </h4>
                 <table class="table table-bordered table-condensed">
                     <tr>
@@ -233,11 +233,11 @@
                         <td>Format: Double</td>
                     </tr>
                 </table>
-                <h4><b>Input data requirements for time series anomaly detection for this trial site:</b></h4>
+                <h4><b>Requirements of the data in the CSV:</b></h4>
                 <ul>
                     <li><h4>Data needs to be complete with chosen granularity without any missing data points.</h4></li>
-                    <li><h4>The training data should contain at least 4 DataPeriod cycles for Periodical time series, or at least 28 days for Unknown DataType.</h4> </li>
-                    <li><h4>Time series dataset should include training data and detection data. DetectionStartTime are the time which separate the training data and detection data, therefore, please make sure data points before DetectionStartTime satisfy the two requirements above.</h4></li>
+                    <li><h4>Time series dataset should include training data and detection data. DetectionStartTime is the time which separates the training data and detection data.</h4></li>
+                    <li><h4>The training data should contain at least 28 days, to ensure a successful training.</h4> </li>
                 </ul>
             </div>
             <div class="modal-footer">
