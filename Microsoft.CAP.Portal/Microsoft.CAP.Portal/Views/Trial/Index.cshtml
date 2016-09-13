@@ -116,7 +116,7 @@
                                 @{
                                     foreach (var engine in ViewBag.AnomalyEngines)
                                     {
-                                        <option value="@engine.EngineId">@engine.Description</option>
+                                        <option value="@engine.EngineId">@engine.Name</option>
                                     }
                                 }
                             </select>
@@ -125,7 +125,7 @@
                     <div id="trial-one-parameters">
                         <div class="form-group">
                             <div class="col-xs-5">
-                                <label class="control-label" for="trial-one-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle">DataPeriod:</label>
+                                <label class="control-label" for="trial-one-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle. The default value is data points of 1 week, please change it to the correct value if the period is not 1 week.">DataPeriod:</label>
                             </div>
                             <div class="col-xs-7">
                                 <input class="form-control" id="trial-one-DataPeriod" name="DataPeriod" />
@@ -172,7 +172,7 @@
                                 @{
                                     foreach (var engine in ViewBag.AnomalyEngines)
                                     {
-                                        <option value="@engine.EngineId">@engine.Description</option>
+                                        <option value="@engine.EngineId">@engine.Name</option>
                                     }
                                 }
                             </select>
@@ -181,7 +181,7 @@
                     <div id="trial-two-parameters">
                         <div class="form-group">
                             <div class="col-xs-5">
-                                <label class="control-label" for="trial-two-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle">DataPeriod:</label>
+                                <label class="control-label" for="trial-two-DataPeriod" data-toggle="tooltip" title="Count of data points in one data period cycle. The default value is data points of 1 week, please change it to the correct value if the period is not 1 week.">DataPeriod:</label>
                             </div>
 
                             <div class="col-xs-7">

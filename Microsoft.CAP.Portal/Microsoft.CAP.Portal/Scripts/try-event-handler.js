@@ -33,6 +33,7 @@ function onCsvSelected(event) {
                     minDate: firstTimestamp,
                     maxDate: lastTimestamp
                 });
+                $("[name=DataPeriod]").val(7*24*60*60/intervalSecs);//default data period: 1 week
 
                 //show dataset
                 $("#trial-one-chart").kendoStockChart(createChartParams("Trial one", tryDataSet, intervalSecs / 60));

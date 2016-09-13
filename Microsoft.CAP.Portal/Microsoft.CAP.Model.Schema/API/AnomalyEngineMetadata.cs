@@ -18,6 +18,11 @@
         public bool IsStateless { set; get; }
 
         /// <summary>
+        /// The algorithm name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// The algorithm description 
         /// </summary>
         public string Description { set; get; }

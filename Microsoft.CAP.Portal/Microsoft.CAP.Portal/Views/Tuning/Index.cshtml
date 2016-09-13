@@ -97,7 +97,7 @@
                             @{
                                 foreach (var engine in ViewBag.AnomalyEngines)
                                 {
-                                    <option value="@engine.EngineId">@engine.Description</option>
+                                    <option value="@engine.EngineId">@engine.Name</option>
                                 }
                             }
                         </select>
@@ -144,7 +144,7 @@
                                 @{
                                     foreach (var engine in ViewBag.AnomalyEngines)
                                     {
-                                        <option value="@engine.EngineId">@engine.Description</option>
+                                        <option value="@engine.EngineId">@engine.Name</option>
                                     }
                                 }
                             </select>
