@@ -13,9 +13,9 @@
         public string DataType { set; get; }
 
         /// <summary>
-        /// IsStateless, AzureML = true
+        /// Type of the Anomaly Detection model supported by this engine.
         /// </summary>
-        public bool IsStateless { set; get; }
+        public string ADModelType { get; set; }
 
         /// <summary>
         /// The algorithm name
